@@ -1,0 +1,27 @@
+\begin{aufg}
+  In dieser Aufgabe wollen wir Klassen als Enten interpretieren, wenn sie sich wie Enten verhalten.
+  Dazu verwenden wir die Klasse \lpy{Ente}:
+  \begin{lstlisting}
+class Ente:
+  """Eine einfache Entenklasse"""
+  def __init__(self, quaks=1):
+    """Erstellt eine Ente.
+       Die Anzahl der quaks kann uebergeben werden."""
+    self.quaks = quaks
+  
+  def __str__(self):
+    return self.quaks * 'Quack!'
+  \end{lstlisting}
+  
+  Erweiter die Klasse \lpy{Polynom} um die spezielle Memberfunktion \lpy{__ente__},
+  die eine Ente zurückgibt, wobei die Anzahl der Quaks dem Grad des Polynoms entsprechen soll.
+  
+  Schreibe eine Funktion \lpy{ente(arg)}, die sich genau wie die bekannten Funktionen \lpy{str(arg)} oder \lpy{int(arg)} verhält.
+  Das heißt, folgender Code soll interpretierbar sein:
+  \begin{lstlisting}
+p = Polynom(...) # Erstellt Polynom p vom Grad n
+e = ente(p)      # Interpretiert p als Ente
+print(e)         # Druckt: Quack!Quack!...Quack! (n mal)
+  \end{lstlisting}
+
+\end{aufg}

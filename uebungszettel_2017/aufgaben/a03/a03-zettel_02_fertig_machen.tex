@@ -1,0 +1,25 @@
+\begin{aufg}
+  Mache Aufgabe 1 und Aufgabe 2 vom gestrigen Tag fertig.
+  Die restlichen Aufgaben sind nicht so wichtig. Die kannst du später bearbeiten.
+  Dabei könntest du hier und da mal ins Skript schauen um dein Wissen zu vertiefen.
+\end{aufg}
+
+\begin{aufg}
+  Da wir nun wissen wie man eine beliebige Anzahl von Argumenten übergibt, verändere den Polynomkonstruktor,
+  so dass man ein Polynom vom Grad (kleiner oder gleich) $n$ durch Angabe von $n+1$ Koeffizienten erstellen kann.
+  Zum Beispiel so:
+  \begin{lstlisting}
+p = Polynom(1,4,2) # p = x^2 + 4x^1 + 2x^0
+  \end{lstlisting}
+\end{aufg}
+
+\begin{aufg}
+  Lies im Skript ein wenig mehr über Ausnahmen und erweitere die Polynomklasse um Ausnahmen.
+  Zum Beispiel soll im Konstruktor die Ausnahme \lpy{raise TypeError('Falscher Typ. Erwarte int oder float.')} vom Typ \lpy{TypeError} mit Wert \lpy{'Falscher Typ. Erwarte int oder float.'} ausgelöst werden,
+  falls einer der übergebenen Parameter nicht vom Typ \lpy{int} oder \lpy{float} ist.
+  
+  Hierbei machen wir darauf aufmerksam wie man überprüft ob ein Objekt \lpy{x} eine Instanz der Klasse \lpy{kl} ist.
+  Das geschieht mit \lpy{isinstance( x, kl )}.
+  Zum Beispiel liefert \lpy{isinstance( 'hi', str )} den Wert \lpy{True} zurück.
+\end{aufg}
+
