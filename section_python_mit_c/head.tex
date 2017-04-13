@@ -1,0 +1,13 @@
+\section{\texorpdfstring{Python + C = $\heartsuit$}{Python plus C gleich Liebe}}
+\label{section:python_mit_c}
+Wir nutzen \CC für Programme, die (so gut wie) ausschließlich zeitkritische Probleme lösen sollen (z.B.\ einen Poissonlöser \cite{joelixC}) oder die direkten Hardwarezugriff brauchen (z.B.\ Treiber).
+Für alles andere nutzen wir \Python.
+Es gibt mehrere Möglichkeiten die Vorteile beider Sprachen zu kombinieren.
+Hier stellen wir zwei Möglichkeiten vor.
+Bei beiden bindet man in \C geschriebenen Bibliotheken in ein \Python Projekt ein.
+Die sogenannten ``Extension Modules'' sind nicht so schnell zu coden wie die sogenannten ``CTypes'', haben aber eine höhere Performance als letztere.
+Die ``CTypes'' sind nicht so performant wie ``Extension Modules'', sind dafür aber schneller zu coden.
+
+\input{section_python_mit_c/extension_modules.tex}
+
+\input{section_python_mit_c/ctypes.tex}

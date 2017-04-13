@@ -1,0 +1,130 @@
+\subsection{Eigene Module in Python bereitstellen}
+\label{section:module:module_selbst_schreiben}
+Um in \Python Bibliotheken zur Verfügung zu stellen, packt man (ähnlich wie in \CC) seinen gesamten Code in ein Modul.
+Das kann zwar ein einziges \Python-Skript sein, aber so gut wie immer macht es viel mehr Sinn, seinen Code in mehreren Dateien (die auf mehrere Ordnern verteilt sind) zu organisieren.
+Es ist gängige Praxis seine logischen Einheiten in einem gewurzelten Baum zu organisieren.
+Jedes Blatt entspricht einer Datei und alle anderen Knoten sind Ordner, welche die darunter liegenden Knoten (also Ordner und Dateien) enthalten.
+Außerdem ist es oft klug einen gewissen Anteil des Codes dem Benutzer nicht direkt zugänglich machen.
+So kann man als Anbieter der Bibliothek kleine Details ändern, ohne dass sich der Benutzer der Bibliothek an neue Funktionen gewöhnen muss.
+
+Wir besprechen anhand eines Beispiel die einfachsten Möglichkeiten ein eigenes Modul zu erstellen.
+Es sei hier noch gesagt, dass Module auch Untermodule bereitstellen können.
+
+
+\subsubsection{Skripte als Module einbinden}
+Im aller einfachsten Fall ist ein Modul nichts anderes als eine \Python-Skript.
+Das haben wir im vergangenen Abschnitt bereits gesehen.
+Nehmen wir an, wir haben bereits eine \Python-Skript \lpy{prog.py} in einem Order \lpy{wurzel} erstellt und mit sinnvollem Code gefüllt.
+Wenn wir nun ein weiteres \Python-Skript \lpy{hauptprog.py} im selben Ordner (also \lpy{wurzel}) anlegen, können wir \lpy{prog.py} mithilfe von \lpy{import} laden.
+Beim Importieren wird die Dateiendung weggelassen:
+\begin{lstlisting}
+# Datei: hauptprog.py
+import prog # Importiert prog.py
+...
+\end{lstlisting}
+Beim importieren des \Python-Skripts \lpy{prog.py} wird dieses Zeile für Zeile gelesen, geprüft und ausgeführt.
+Danach kann man auf die Funktionen, Klasses und Variablen mithilfe des Präfixes \lpy{prog.} zugreifen.
+Also greifen wir auf die Variable \lpy{x} die in \lpy{prog.py} definiert wurde mit \lpy{prog.x} zu.
+
+\subsubsection{Ordner als Module einbinden}
+Im nächst einfachen Fall ist ein Modul nichts anderes als ein Order gefüllt mit \Python-Skripten.
+Gehen wir davon aus, dass wir einen Ordner \lpy{skript_bib} haben, in dem die \Python-Skripte \lpy{skript_eins.py}, \lpy{skript_zwei.py} und \lpy{skript_drei.py} liegen haben.
+Damit der \Python-Interpreter den Ordner \lpy{skript_bib} als Modul interpretieren kann, muss der Ordner ein \Python-Skript mit dem Namen \lpy{__init__.py} enthalten.
+Dieses Skript wird beim Einbinden des Moduls Zeile für Zeile gelesen, geprüft und ausgeführt.
+Alle anderen Skripte werden nicht automatisch interpretiert, denn das ist überlicherweise die Aufgabe von \lpy{__init__.py}.
+In \lpy{__init__.py} bindet man dann entweder alle Klassen, Funktionen und Variablen der anderen Skripte ein.
+Das geschieht mithilfe von
+\begin{lstlisting}
+from skript_eins.py import *
+\end{lstlisting}
+oder man bindet nur die benötigen Klassen, Funktionen und Variablen der anderen Skripte ein.
+Das geschieht mithilfe von
+\begin{lstlisting}
+from skript_zwei.py import klasse_a, klasse_b, funktion_z
+\end{lstlisting}
+Sobald das Modul \lpy{skript_bib} importiert ist, kann man auf alle Klassen, Funktionen und Variablen, die dem Skript \lpy{__init__.py} bekannt sind, mithilfe des Präfixes \lpy{skript_bib.} zugreifen.
+
+Wir besprechen das nun anhand eines Beispiels.
+Angenommen wir wollen ein Modul \lpy{JoelixBlas} anfertigen, dass sich wie die Bibliothek \lcpp{joelixblas} verhält (siehe \cite{joelixC}).
+Das heißt, wir wollen ein Modul, das Vektoren und (dünnbesetzte Matrizen) anbietet und elementare Operationen (wie zum Beispiel Matrix-Vektor-Multiplikation) bereitstellt.
+Zunächst erstellen wir ein Verzeichnis mit dem Namen unseres Moduls, also \lpy{JoelixBlas}.
+Die logischen Einheiten \lpy{JoelixVektor} und \lpy{JoelixMatrix} sind zu gewissen Teilen voneinander unabhängig und wir entscheiden uns dazu, sie in zwei separate Dateien zu lagern.
+Unsere Verzeichnisstruktur sollte zu diesem Zeitpunkt so aussehen:
+\begin{lstlisting}[language=plain]
+JoelixBlas
+  +--joelix_vektor.py
+  +--joelix_matrix.py
+\end{lstlisting}
+Nun implementieren wir die Klassen \lpy{JoelixVektor} und \lpy{JoelixMatrix}.
+Um \lpy{JoelixVektor} zu implementieren, brauchen wir die Klasse \lpy{JoelixMatrix} nicht zu kennen.
+Die Datei \lpy{joelix_vektor.py} sieht so aus:
+\begin{lstlisting}
+class JoelixVektor:
+  """Vektorklasse der JoelixBlas."""
+  ...
+  def __add__(self, other): # Implementiert Vektor-Vektor-Addition
+    """Implementiert Vektor-Vektor-Addition."""
+    if type(other) is type(self):
+      # Vektor-Vektor-Addition
+  ...
+\end{lstlisting}
+Die Matrix-Matrix-Multiplikation und die Matrix-Vektor-Multiplikation soll durch eine spezielle Memberfunktion von \lpy{JoelixMatrix} realisiert werden.
+Da wir die Klasse \lpy{JoelixVektor} für die Matrix-Vektor-Multiplikation benötigen, binden wir \lpy{joelix_vektor} in \lpy{joelix_matrix} ein:
+Die Datei \lpy{joelix_matrix.py} sieht so aus:
+\begin{lstlisting}
+# JoelixMatrix.py
+from joelix_vektor import JoelixVektor
+
+class JoelixMatrix:
+  """Duennbesetzte Matrix der JoelixBlas."""
+  ...
+  def __mul__(self, other): # Definiere Matrix-X-Multiplikation
+    """Implementiert die Matrix-X-Multiplikation."""
+    if type(other) is type(self):
+      # Matrix-Matrix-Multiplikation
+    elif type(other) is JoelixVektor:
+      # Matrix-Vektor-Multiplikation
+  ...
+\end{lstlisting}
+Damit wir den Ordner \lpy{JoelixBlas} als Modul einbinden können, braucht der Ordner \lpy{JoelixBlas} noch das \Python-Skript \lpy{__init__.py}.
+In diesem importieren wir die Klasse \lpy{JoelixVektor} aus \lpy{joelix_vektor.py} und die Klasse \lpy{JoelixMatrix} aus der Datei \lpy{joelix_matrix.py}.
+\begin{lstlisting}
+# Datei: __init__.py
+from joelix_vektor import JoelixVektor
+# Jetzt kennt __init__.py die Klasse JoelixVektor
+from joelix_matrix import JoelixMatrix
+# Jetzt kennt __init__.py die Klasse JoelixMatrix
+\end{lstlisting}
+Unsere Verzeichnisstruktur sollte also so aussehen:
+\begin{lstlisting}[language=plain]
+JoelixBlas
+  +--__init__.py
+  +--joelix_vektor.py
+  +--joelix_matrix.py
+\end{lstlisting}
+
+Jetzt können wir das Modul \lpy{JoelixBlax} in einem \Python-Programm verwenden.
+Zum Beispiel erstellen wir ein \Python-Skript mit dem Namen \lpy{test.py} das imselben Order liegt, wie der Ordner \lpy{JoelixBlas}.
+Unsere Verzeichnisstruktur sollte also so aussehen:
+\begin{lstlisting}[language=plain]
+mein_programm
+  +--test.py
+  +--JoelixBlas
+       +--__init__.py
+       +--joelix_vektor.py
+       +--joelix_matrix.py
+\end{lstlisting}
+Das \Python-Skript \lpy{test.py} sieht so aus:
+\begin{lstlisting}
+import JoelixBlas
+
+def main():
+  Vek = JoelixBlas.JoelixVektor(dim=3)
+  Vek[0] = 5.0
+  Vek[1] = 4.6
+  Vek[2] = 1.8
+  print( Vek )
+
+if __name__ == '__main__':
+  main()
+\end{lstlisting}

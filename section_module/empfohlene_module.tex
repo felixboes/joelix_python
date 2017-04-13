@@ -1,0 +1,352 @@
+\subsection{Empfohlene Module}
+\label{section:module:empfohlene_module}
+In diesem Abschnitt beschreiben wir eine Hand voll Module, die wir für besonders wichtig halten.
+Um dieses Skript nicht unnötig lang werden zu lassen, besprechen wir die Module nur ganz oberflächlich und verweisen die interessierte Leserin auf die offizielle Dokumentation der hier besprochenen Module.
+Die Module in den Abschnitten \ref{section:module:empfohlene_module:re},
+\ref{section:module:empfohlene_module:copy},
+\ref{section:module:empfohlene_module:math},
+\ref{section:module:empfohlene_module:cmath},
+\ref{section:module:empfohlene_module:random},
+\ref{section:module:empfohlene_module:itertools},
+\ref{section:module:empfohlene_module:pickle},
+\ref{section:module:empfohlene_module:os},
+\ref{section:module:empfohlene_module:time},
+\ref{section:module:empfohlene_module:argparse},
+\ref{section:module:empfohlene_module:multiprocessing},
+\ref{section:module:empfohlene_module:subprocess},
+und \ref{section:module:empfohlene_module:sys}
+sind (in dieser Reihenfolge) durch den \Python-Standard beschrieben.
+Im Abschnitt \ref{section:module:empfohlene_module:rest} empfehlen wir noch einige Module, die für Mathematiker interessant sein dürften.
+
+
+\subsubsection{re}
+\label{section:module:empfohlene_module:re}
+Ein ``regulärer Ausdruck'' ist ein String (mit vielen Sonderzeichen) mitdem eine Menge von gültigen Strings beschrieben wird.
+Zum Beispiel ist die Menge der gültigen String zum reguläre Ausdruck \lpy{*.py}, die Menge der Strings die mit \lpy{.py} enden und einen beliebigen (eventuell leeren) Wortanfang besitzen.
+Eigentlich verdienen reguläre Ausdrücke ein eigenes Kapitel, das würde dieses Skript aber inhaltlich sprengen.
+Wir machen hier nur darauf aufmerksam, dass das Modul \lpy{re} viele Methoden zum Arbeiten mit regulären Ausdrücken bereitstellt.
+Wenn man mit regulären Ausdrücken vertraut ist, ließt man in \cite[Library, Text Processing Services, Regular expression operations]{Python3} wie das Modul \lpy{re} zu benutzen ist.
+Sonst verweisen wir den Leser auf \cite[Kapitel 33]{LottPython}.
+
+
+\subsubsection{copy}
+\label{section:module:empfohlene_module:copy}
+Wir haben in Abschnitt \ref{section:std_data_types:sequenzen:kopien} gesehen, dass Kopien von Sequenzen immer oberflächeliche Kopien sind.
+Das ist zwar schnell, kann aber zu ungewollten Effekten führen wenn man nicht vorsichtig ist.
+Um echte Kopien zu erstellen, benutzt man das Modul \lpy{copy}.
+Die darin implementierte Funktion \lpy{copy.deepcopy} erstellt sogenannte tiefe Kopien.
+
+
+\subsubsection{math}
+\label{section:module:empfohlene_module:math}
+Das Modul \lpy{math} stellt die mathematischen Funktionen und Konstanten zur Verfügung, die der \C-Standard beschreibt.
+Zum Beispiel zieht man die Wurzel mit \lpy{math.sqrt}.
+\begin{lstlisting}
+import math
+math.sqrt(4.0)
+\end{lstlisting}
+
+
+\subsubsection{cmath}
+\label{section:module:empfohlene_module:cmath}
+Das Modul \lpy{cmath} beschreibt dieselben mathematischen Funktionen und Konstanten, allerdings ist der Definitions- und Wertebereich \lpy{complex} statt \lpy{float}.
+Zum Beispiel zieht man die komplexe Wurzel mit \lpy{cmath.sqrt}.
+\begin{lstlisting}
+import cmath
+cmath.sqrt(-1.0)
+\end{lstlisting}
+
+
+\subsubsection{random}
+\label{section:module:empfohlene_module:random}
+Das Modul \lpy{random} implementiert einfache Pseudozufallszahlengeneratoren für verschiedene Verteilungen.
+Um aus einer Sequenz ein Element (bezüglich der Gleichverteilung) zufällig auszuwählen, nutzt man die Funktion \lpy{random.choice}.
+Beispielsweise kann man einen Buchstaben aus dem String \lstinline[style=PyInline]|"Hallo Welt"| wie folgt zufällig auswählen:
+\begin{lstlisting}
+import random
+random.choice( "Hallo Welt" )
+\end{lstlisting}
+
+
+\subsubsection{itertools}
+\label{section:module:empfohlene_module:itertools}
+Um aus Sequenzen (oder allgemeiner ``iterierbaren Objekten``) neue iterierbare Objekte zu erstellen, benutzt man das Modul \lpy{itertools}.
+Dieses Modul ist nicht nur speicher- und laufzeiteffizient sondern auch sehr mächtig, wenn man es richtig einzusetzen weiß.
+An dieser Stelle sei gesagt, dass die Funktionen von \lpy{itertools} bei gegebenem Input keine Sequenzen erstellen (die dann anschließend Element für Element ausgelesen werden können),
+sondern sie erstellen sogenannte ''iterierbares Objekte``, die den aktuell zu verarbeiteten Eintrag zur Laufzeit generieren.
+Dass spart bei großem Input wertvollen Speicher und ist meistens schneller.
+Wir stellen hier nur zwei sehr einfache Funktionen vor und legen der interessierten Leserin \cite[Library, Funktional Programming Tools, itertools]{Python3} an Herz.
+
+Um aus zwei Sequenzen \lpy{A} und \lpy{B} eine Sequenz \lpy{((x,y) for x in A for y in B)} zu erstellen, reicht der angegebene Ausdruck,
+allerdings ist die Funktion \lpy{itertools.product} schneller und speichereffizienter.
+Hier ein Beispiel:
+\begin{lstlisting}
+import itertools
+A = 'Hallo Welt'
+B = ( 1.0, 4.5, 'sss' )
+C = itertools.product(A,B) # Aequivalent zu ((x,y) for x in A for y in B)
+\end{lstlisting}
+Außerdem kann man \lpy{product} eine beliebige Anzahl von Sequenzen übergeben.
+
+Um (eine Sequenz) alle(r) Permutationen einer gegebenen Sequenz \lpy{s} zu erhalten, nimmt man die Funktion \lpy{itertools.permutations}.
+Beispielsweise erhält man alle Permutationen des String \lpy{'Valhalla'} wie folgt:
+\begin{lstlisting}
+import itertools
+p = itertools.permutations('Valhalla')
+for x in p:
+  print(x)  # Druckt:
+            # ('V', 'a', 'l', 'h', 'a', 'l', 'l', 'a')
+            # ('V', 'a', 'l', 'h', 'a', 'l', 'a', 'l')
+            # ('V', 'a', 'l', 'h', 'a', 'l', 'l', 'a')
+            # ...
+\end{lstlisting}
+Will man (eine Sequenz) alle(r) Permutationen von \lpy{s} der Länge \lpy{r}, haben, übergibt man \lpy{permutations} noch den Parameter \lpy{r}:
+\begin{lstlisting}
+import itertools
+p = itertools.permutations('Valhalla', 2)
+for x in p:
+  print(x)  # Druckt:
+            # ('V', 'a')
+            # ('V', 'l')
+            # ('V', 'h')
+            # ...
+\end{lstlisting}
+In beiden Fällen ist es wichtig zu wissen, dass man die gesamte Symmetrische Gruppe auf (einem variierenten Teil der Länge $r$) der Sequenz operieren lässt.
+Insbesondere besteht \lpy{itertools.permutations(s)} aus $l!$ vielen Elementen, wenn \lpy{s} eine Sequenz der Länge $l$ ist, selbst wenn manche Werte in \lpy{s} mehrfach vorkommen.
+
+
+\subsubsection{pickle}
+\label{section:module:empfohlene_module:pickle}
+Um Objekte in \Python auf der Festplatte zu speichern und von der Festplatte zu laden, kann man das Modul \lpy{pickle} benutzen.
+Das Speichern und Laden ist plattformunabhängig, solange die gleiche \Python-Version verwendet wird, das heißt,
+man kann mit \lpy{pickle} gespeicherte Daten zwischen den Betriebssystemen GNU/Linux, Mac und Windows hin und hertauschen, solange man dieselbe \Python-Version verwendet.
+
+Um mehrere Objekte in einer Datei zu speichern, muss zuerst das Modul \lpy{pickle} importiert werden.
+Nun muss man eine Datei \lpy{datei} zum Schreiben im ''Bytemodus`` geöffnet werden.
+Dies geschieht durch den Ausdruck \lpy{datei = open('pfad', 'wb')}.
+Im Anschluss kann man mit \lpy{pickle.dump(obj, datei)} ein Objekt nach dem anderen in die zuvor geöffnete Datei \lpy{datei} schreiben.
+Im folgenden Beispiel speichern wir die Zahlen \lpy{0, ..., 9}:
+\begin{lstlisting}
+import pickle                # Importiert pickle
+datei = open( 'test', 'wb' ) # Oeffnet Datei 'test' im Bytemodus
+for i in range(10):          # Fuer 0 <= i < 10:
+  pickle.dump(i, datei)      # Schreibe i in datei
+datei.close()                # Datei schliessen
+\end{lstlisting}
+
+Um mehrere Objekte aus einer Datei zu lesen, muss ebenfalls zuerst das Modul \lpy{pickle} importiert werden.
+Nun muss man eine Datei \lpy{datei} zum Lesen im ''Bytemodus`` geöffnet werden.
+Dies geschieht durch den Ausdruck \lpy{datei = open('pfad', 'rb')}.
+Im Anschluss kann man mit \lpy{pickle.load(datei)} ein Objekt nach dem anderen aus der zuvor geöffneten Datei \lpy{datei} lesen.
+Das Lesen der zuvor gespeicherten Objekte funktioniert nach dem ''FIFO``-Prinzip, d.h.\ Daten die zuerst geschrieben wurde, werden zuerst gelesen.
+Der Funktionsaufruf \lpy{pickle.load(datei)} gibt das gespeicherte Objekt zurück oder löst eine Ausnahme vom Typ \lpy{EOFError} aus sofern die Datei keine weiteren Objekte enthält.
+Im folgen Beispiel lesen wir alle Daten aus einer Datei aus.
+\begin{lstlisting}
+import pickle                 # Importiert pickle
+datei = open( 'test', 'rb' )  # Oeffnet Datei 'test' im Bytemodus
+dateiende_erreicht = False    # Soll True sein wenn Datei am Ende ist
+objekte = []                  # Liste der gelesenen Objekte
+while dateiende_erreicht == False: # Solange die Datei nicht am Ende ist
+   try:                       # Versuche
+     obj = pickle.load(datei) # Ein Objekt zu lesen
+     objekte.append(obj)      # Das gelesene Objekt zur Liste hinzufuegen
+   except EOFError:           # Fange EOFError ab (= Dateiende erreicht)
+     dateiende_erreicht = True # Setze dateiende_erreicht auf True
+datei.close()                 # Datei schliessen
+print(objekte)                # Drucke Liste der Objekte aus
+\end{lstlisting}
+
+
+\subsubsection{os}
+\label{section:module:empfohlene_module:os}
+Das Modul \lpy{os} ermöglicht es uns betriebssystemespeziefische Aufgaben plattformunabhängig zu lösen.
+Beispielsweise müssen Unterordner im Dateipfad unter Windows mit \lstinline[style=PyInline]|'\'| und unter GNU/Linux und Mac mit \lpy{'/'} kennzeichnen.
+Als \Python-Programmererin hat man an solchen lästigen Fallunterscheidungen kein Interesse.
+Mit \lpy{os.mkdir('pfad')} erstellt man neue Ordner.
+Um zum Beispiel zu testen, ob ein Dateipfad einen Ordner oder eine normale Datei benennt, kann man folgende Funktionen verwenden.
+\begin{lstlisting}
+import os
+os.path.isfile('pfad') # True gdw 'pfad' eine normale Datei ist
+os.path.isdir('pfad')  # True gdw 'pfad' ein Ordner ist
+\end{lstlisting}
+
+
+\subsubsection{time}
+\label{section:module:empfohlene_module:time}
+Wie der Name des Moduls \lpy{time} vermuten lässt, benutzt man es um die Zeit zu messen oder eine Pause einzulegen.
+Um einen Prozess für \lpy{k} Sekunden schlafen zu legen, nutzt man die Funktion \lpy{time.sleep(k)}.
+Um die Echtzeit zu messen, benutzt man die Funktion \lpy{time.perf_counter}.
+Die CPU-Zeit eines Prozesses misst man mit \lpy{time.process_time}.
+Hier ein Beispiel:
+\begin{lstlisting}
+import time
+echtzeit_start = time.perf_counter()
+cpuzeit_start  = time.process_time()
+# Hier eine aufwaendige Berechnung einsetzen, welche die CPU zu
+# 100% auslastet und ca. 1000 Sekunden dauert
+time.sleep(500) # Warte nochmal 500 Sekunden (CPU-Kosten ~ 0%)
+echtzeit_dauer = time.perf_counter() - echtzeit_start # ~ 1500
+cpuzeit_dauer  = time.process_time() - cpuzeit_start  # ~ 1000
+\end{lstlisting}
+
+
+\subsubsection{argparse}
+\label{section:module:empfohlene_module:argparse}
+Mit dem Modul \lpy{argparse} kann man ganz einfach benutzerfreundliche Kommandozeileninterfaces herstellen.
+Kurz gesagt, legt man mit \lpy{argparse} fest, welche Kommandozeilenparameter es gibt, welche Parameter optional sind und welche notwendig sind.
+Sind die Kommandozeilenparameter gültig, wird ein Verzeichniss der Parameter erstellt, die den Programm dann zur Verfügung stehen.
+
+Zuerst erstellen wir einen ''Argumentparser`` mit
+\begin{lstlisting}
+import argparse
+parser = argparse.ArgumentParser(description='Beschreibung d. Programms')
+\end{lstlisting}
+Als Parameter \lpy{description} übergibt man einen String, der das Programm genau beschreibt.
+Als nächstes erklären wir, welche Parameter dem Programm per Kommandozeile übergeben werden können.
+Außerdem können wir Standardwerte festlegen oder bestimmen, welche Parameter optional sind und welche nicht.
+Dazu benutzen wir die Memberfunktion \lpy{add_argument}.
+Neben dem Namen der Kommandozeilenoption, erklären wir noch einige optionale Parameter der Funktion.
+\begin{lstlisting}
+name     # Name des Parameters z.B. spam
+action   # Wir besprechen hier:
+         # (1) 'store': der nach spam folgende Parameter wird gespeichert
+         # (2) 'store_true': speichert True (wenn spam ein Parameter ist)
+type     # Legt den Typ fest, der gespeichert wird
+default  # Legt einen Standardwert fest, auch wenn spam kein Parameter ist
+required # Wenn required=True ist, muss spam Parameter sein
+help     # String zur Erklaerung des Parameter fuer den Benutzer
+\end{lstlisting}
+Um Übergebene Kommandozeilenparameter auf Gültigkeit zu prüfen und im Anschluss Objekt mit den entsprechenden Parametern zu erstellen, rufen wir die Memberfunktion \lpy{parse_args} auf.
+Diese gibt (auch wenn wir in diesem Skript nicht genug auf Namespaces eingegangen sind) einen Namespace, der die übergebenen Parameter beschreibt.
+Aus diesem machen wir ein Verzeichniss mit der eingebauten Funktion \lpy{vars}.
+Die Schlüssel des Verzeichnisses sind die Namen der Parameter:
+\begin{lstlisting}
+argumente = vars(parser.parse_args()) # Erstellt Verzeichniss d. Argumente
+print(argumente)                      # Druckt das Verzeichniss aus
+\end{lstlisting}
+Das ganze versteht man am besten anhand eines Beispiels:
+Hier wollen wir ein simples Programm schreiben, das zwei Zahlen addiert oder subtrahiert.
+Dabei sollen dem Programm die Zahlen \lpy{x} und \lpy{y} und der Operand \lpy{op} in beliebiger Reihenfolge übergeben werden.
+Wenn man einen Parameter vergisst soll die Hilfe ausgegeben werden, die beschreibt wie das Programm funktioniert.
+Die Berechnungsfunktion sieht so aus:
+\begin{lstlisting}
+def berechne(x,y,op):
+  if op == 'plus':
+    print('{} + {} = {}'.format(x,y,x+y))
+  else:
+    print('{} - {} = {}'.format(x,y,x-y))
+\end{lstlisting}
+Jetzt erstellen wir den Argumentenparser:
+\begin{lstlisting}
+import argparse
+parser = argparse.ArgumentParser(description='Berechnet x op y')
+parser.add_argument(
+  '-x', action='store', type=float, required=True, help='Die Zahl x')
+parser.add_argument(
+  '-y', action='store', type=float, required=True, help='Die Zahl y')
+parser.add_argument(
+  '-op', action='store', type=str, required=True, help='plus oder minus')
+\end{lstlisting}
+Jetzt setzen wir alles im main-modul zusammen.
+Das heißt, wir lassen der Argumentparser die übergebenen Parameter interpretieren und rufen dann die Funktion \lpy{berechne} auf.
+Der vollständige Code ist wie folgt.
+\begin{lstlisting}
+import argparse
+parser = argparse.ArgumentParser(description='Berechnet x op y')
+parser.add_argument(
+  '-x', action='store', type=float, required=True, help='Die Zahl x')
+parser.add_argument(
+  '-y', action='store', type=float, required=True, help='Die Zahl y')
+parser.add_argument(
+  '-op', action='store', type=str, required=True, help='plus oder minus')
+
+def berechne(x,y,op):
+  if op == 'plus':
+    print('{} + {} = {}'.format(x,y,x+y))
+  else:
+    print('{} - {} = {}'.format(x,y,x-y))
+
+def main():
+  args = vars(parser.parse_args()) # Erstellt Verzeichniss d. Argumente
+  print(args)
+  berechne(**args)
+
+if __name__ == '__main__':
+  main()
+\end{lstlisting}
+
+
+\subsubsection{multiprocessing}
+\label{section:module:empfohlene_module:multiprocessing}
+Auch in \Python können wir nebenläufige Programme schreiben, indem wir (mehr oder weniger) voneinander unabhängige Programmabschnitte parallel ausführen.
+Im aller einfachsten Fall, wo wir eine Funktionen \lpy{f} mit Parametern \lpy{p_1, ..., p_k} parallel aufrufen möchten, gehen wir wie folgt vor:
+Wir importieren \lpy{multiprocessing} und erstellen einen sogenannten ''Arbeiterpool``.
+Ein Arbeiterpool ist eine Menge von Arbeiterprozessen, die ihre Aufgaben parallel bearbeiten können.
+Man kann die Größe des Pools mit dem Parameter \lpy{processes} selbst angeben oder das Betriebssystem die maximale Anzahl von Arbeitern selbst bestimmen lassen.
+Unser Programmcode sieht bis jetzt zum Beispiel so aus:
+\begin{lstlisting}
+import multiprocessing
+if __name__ == '__main__':
+  arbeiterpool = multiprocessing.Pool(processes=2) # Pool der Groesse 2
+\end{lstlisting}
+Haben wir eine Funktion \lpy{f} definiert und eine Liste \lpy{data} von (Listen von) Argumenten, die wir \lpy{f} übergeben,
+so können wir diese Funktionen wie folgt parallel ausführen.
+\begin{lstlisting}
+import multiprocessing
+import time
+def f( x,t ):
+  time.sleep(t)
+  print(x)
+if __name__ == '__main__':
+  arbeiterpool = multiprocessing.Pool(processes=2) # Pool der Groesse 2
+  data = [('Hallo', 2), ('Welt',1), ('Python',3), ('ist',1), ('cool',2)]
+  arbeiterpool.starmap( f, data )
+\end{lstlisting}
+Es ist ganz wichtig, dass wir hier abfragen, ob das Modul das main-Modul ist,
+denn beim Parallelisieren mit \lpy{multiprocessing} wird das main-Modul ggf.\ in sich selbst neu eingebunden.
+Wenn man mit Funktionen arbeitet, die nur ein Argument bekommt, nimmt man oft \lpy{arbeitspool.map} statt \lpy{arbeitspool.starmap}:
+\begin{lstlisting}
+import multiprocessing
+def f( x ):
+  print(x)
+if __name__ == '__main__':
+  arbeiterpool = multiprocessing.Pool(processes=2) # Pool der Groesse 2
+  data = ['Hallo', 'Welt', 'Python', 'ist', 'cool']
+  arbeiterpool.map( f, data )
+\end{lstlisting}
+
+
+\subsubsection{subprocess}
+\label{section:module:empfohlene_module:subprocess}
+Manchmal möchte oder muss man ein anderes Programm aus \Python heraus aufrufen.
+Dazu verwendet man das Modul \lpy{subprocess}.
+Man kann mit dem aufgerufenen Programm kommunizieren (zum Beispiel Eingaben oder Signale Senden und Ausgaben empfangen),
+wie das genau funktioniert erklären wir hier jedoch nicht und verweisen auf \cite[Library, Concurrent Execution, Subprocess management]{Python3}.
+Ein Programm \lpy{programm} mit einer Kommandozeilen Parametern \lpy{'par_1', ..., 'par_k'} startet man wie folgt:
+\begin{lstlisting}
+import subprocess
+p = subprocess.run([programm, par_1, ..., par_k], stdout=subprocess.PIPE)
+\end{lstlisting}
+Im Anschluss liegt der Rückgabewert des Programms \lpy{programm} in \lpy{p.returncode} und der Standardoutput von \lpy{programm} liegt in \lpy{p.stdout}.
+
+Wir machen hier darauf aufmerksam, dass \lpy{subprocess.run} erst ab der \Python-Version 3.5 existiert.
+Für führere \Python-Versionen, kann man \lpy{subprocess.call} verwenden; diese Funktion gibt aber nur den Rückgabewert des Programms zurück, den Standardoutput muss man sich anders besorgen.
+
+
+\subsubsection{sys}
+\label{section:module:empfohlene_module:sys}
+Das Modul \lpy{sys} hält einige Variablen und Funktionen bereit, die start vom \Python-Interpreter abhängen.
+Zum Beispiel ist die \Python-Version durch das Tupel \lpy{sys.version_info} beschrieben und der Standardoutput wird durch \lpy{sys.stdout} abgebildet.
+
+
+\subsubsection{Weitere Python Module}
+\label{section:module:empfohlene_module:rest}
+Um numerische Berechnungen durchzuführen, gibt es das \Python-Projekt \lpy{scipy}.
+Es ist sehr gut und baut auf \lpy{numpy} auf.
+
+Sowohl numerische Berechnungen als auch algebraische Modellierung kann man mit dem \Python-Projekt \lpy{SageMath} durchführen.
+Dieses greift auf eine riesige Bibliothek von Projekten zu, die in verschiedenen Programmiersprachen geschrieben sind.
+Es ist sehr gut.
+
+Um ein bisschen zu malen oder mit Bildern zu arbeiten empfehlen wir noch \lpy{pygame}, \lpy{cairo} und \lpy{PIL}.
+Auch diese Module sind sehr gut.

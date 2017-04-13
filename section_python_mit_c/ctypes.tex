@@ -1,0 +1,41 @@
+\subsection{CTypes}
+\label{section:python_mit_c:ctypes}
+Um ein \Python Projekt (fast) ohne Aufwand um eine bereits in \C implementierte Funktion zu erweitern, kann man ``CTypes'' verwenden.
+Das funktioniert sogar, wenn die Funktion nur als ``shared library'' existiert und der Quellcode nicht vorliegt.
+
+Nehmen wir an, wir brauchen eine \Python-Funktion \lpy{subtraktion}, welche die Differenz zweier Gleitkommazahlen berechnet.
+Nehmen wir außerdem an, dass die Funktion bereits in kompilierter Form vorliegt und folgende Signatur hat.
+\begin{lstlisting}[language=C++,style=CPP]
+double subtraktion(double, double);
+\end{lstlisting}
+Die zugehörige shared library heißt \lcpp{libminus.so}.
+
+Um \lcpp{libminus.so} nutzen zu können, binden wir zunächst das Paket \lpy{ctypes} ein.
+\begin{lstlisting}
+import ctypes
+\end{lstlisting}
+Dann laden wir die Bibliothek \lcpp{libminus.so}.
+\begin{lstlisting}
+bib = ctypes.cdll.LoadLibrary("./libminus.so")
+\end{lstlisting}
+Auf Funktionen \lcpp{f} und globalen Variablen \lcpp{x} von \lcpp{libminus.so} können wir nun durch \lpy{bib.f} und \lpy{bib.x} zugreifen.
+Wir erstellen zunächst eine Variable \lpy{subtraktion_py} die auf die \C-Funktion \lcpp{subtraktion} zeigt.
+\begin{lstlisting}
+subtraktion_py = bib.subtraktion
+\end{lstlisting}
+Nun legen wir fest, wie der Rückgabetyp der \C-Funktion in \Python interpretieren werden soll und wie die \Python-Argumente in \C interpretiert werden sollen.
+Ist ein \C-Parameter oder der \C-Rückgabewert vom Typ \lcpp{typ} und ist dieser Typ durch den \C-Standard definiert, so können wir die Konvertierung in diesen Typ mit \lpy{ctypes.c_typ} festlegen.
+Die Konvertierung in den \C-Typ \lcpp{float} wird also durch \lpy{ctypes.c_float} festgelegt.
+Den Rückgabetyp einer Funktion \lpy{f} setzt man mit \lpy{f.restype = ctypes.c_...}.
+Die Argumenttypen einer Funktion \lpy{f} wird durch eine Listen von \lpy{ctypes.c_...} angegben, also \lpy{f.argtypes = [ctypes.c_..., ...]}.
+Den Rückgabetyp und die Argumente unserer Funktion \lpy{subtraktion_py} setzen wir also so:
+\begin{lstlisting}
+subtraktion_py.restype  = ctypes.c_double
+subtraktion_py.argtypes = [ctypes.c_double, ctypes.c_double]
+\end{lstlisting}
+Jetzt können wir die \C-Funktion aus \Python heraus ausrufen.
+\begin{lstlisting}
+print( subtraktion_py(3.5, 6.2) )
+\end{lstlisting}
+
+Weiterführende Konzepte wie zum Beispiel variable Argumente findet man in \cite[Library, Generic Operating System Services, CTypes]{Python3}.

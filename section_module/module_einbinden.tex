@@ -1,0 +1,99 @@
+\subsection{Module einbinden}
+\label{section:module:module_einbinden}
+\Python ist so mächtig und empfehlenswert, weil es eine riesige Auswahl an guten Modulen gibt, die nur noch auf ihre Nutzung warten.
+Module werden mit dem Befehl \lpy{import} eingebunden.
+\begin{lstlisting}
+import modulname
+\end{lstlisting}
+Beim Einbinden eines Modul \lpy{modul} wird \lpy{modul} Zeile für Zeile gelesen, geprüft und ausgeführt (also genauso wie beim main-Modul).
+Wird ein Modul eingebunden, bekommt es Attribute, zum Beispiel wird der Name des Moduls in der Variable \lpy{__name__} gespeichert.
+Um das besser zu verstehen, schauen wir uns folgendes Beispiel an.
+Beginnen wir mit der Datei \lpy{hilfsmodul.py}, die so aussehen könnte.
+\begin{lstlisting}
+if __name__ == '__main__': # Pruefe, ob das Modul das main-Modul ist
+  print('Ich bin das main-Modul.')
+else:
+  print('Ich bin als Modul mit Namen "' + __name__ + '" geladen worden.')
+\end{lstlisting}
+\PythonDrei interpretiert \lpy{hilfsmodul.py} dann so:
+\begin{lstlisting}[language=bash]
+python3 hilfsmodul.py
+  # Ich bin das main-Modul.
+\end{lstlisting}
+Nun erstellen wir (im selben Ordner) noch ein \Python Skript, mit Namen \lpy{hauptprogramm.py}, das so aussieht.
+\begin{lstlisting}
+import hilfsmodul
+
+if __name__ == '__main__': # Pruefe, ob das Modul das main-Modul ist
+  print('Ich bin hier der Boss.')
+\end{lstlisting}
+Schauen wir uns jetzt an, wie \Python dieses Skript interpretiert.
+Als erstes wird das Modul \lpy{hilfsmodul} geladen, welches bei uns durch die Datei \lpy{hilfsmodul.py} repräsentiert wird.
+Beim Laden des Moduls \lpy{hilfsmodul} wird dieses Zeile für Zeile gelesen, geprüft und ausgeführt.
+Da es nicht das main-Modul ist, trägt es einen anderen Namen und dieser wird dann auch ausgedruckt.
+Nachdem das Modul \lpy{hilfsmodul} fertig eingebunden wurde, geht es weiter mit dem Skript \lpy{hauptprogramm.py}.
+Dieses ist das main-Modul, also wird noch \lpy{'Ich bin hier der Boss.'} ausgedruckt.
+Der gesamte Output sieht also so aus:
+\begin{lstlisting}[language=bash]
+python3 hauptprogramm.py 
+  # Ich bin als Modul mit Namen "hilfsmodul" geladen worden.
+  # Ich bin hier der Boss.
+\end{lstlisting}
+
+Haben wir ein Modul \lpy{hilfsmodul} eingebunden, können wir auf die darin definierten Klassen, Funktionen und Variablen mit dem Präfix \lpy{hilfsmodul.} zugreifen.
+Wurde in \lpy{hilfsmodul} beispielsweise eine Funktion \lpy{funktion_eins} definiert, greifen wir auf diese im main-Modul mit \lpy{hilfsmodul.funktion_eins} zu.
+Hier ein vollständiges Beispiel.
+\begin{lstlisting}
+import math             # Importiere das Modul math
+
+s = math.sin(3.141/5.0) # Berechne den Sinus von 3.141/5.0
+print(s)                # Drucke den Sinus von 3.141/5.0 aus.
+\end{lstlisting}
+
+Es kommt manchmal vor, dass man auf den Inhalts eines Moduls nicht über seinen gegebenen Namen sondern einen frei gewählten Namen zugreifen möchte.
+Das kommt zum Beispiel vor, wenn es zwei Versionen einer Bibliothek benutzen möchte (eine ist optimiert, die andere produziert viele Debuginformationen).
+In diesem Fall will man nur ganz zu Anfang des Programs festlegen welche Bibliothek eingebunden werden soll ohne weitere Zeilen im Code zu ändern.
+In \Python funktioniert das so:
+\begin{lstlisting}
+import modulname as neuer_modulname
+\end{lstlisting}
+Nun kann man auf die Klassen, Funktionen und so weiter von \lpy{modulname} mit dem Präfix \lpy{neuer_modulname.} zugreifen.
+Schauen wir uns das ganze mal in einem Beispiel an.
+In \Python gibt es das Modul \lpy{math} und das Modul \lpy{cmath}.
+Das erste bietet die mathematischen Größen und Funktionen an, die im \C-Standard definiert sind;
+das zweite bietet analoge mathematische Funktionen an, die auch für komplexe Zahlen definiert sind.
+\begin{lstlisting}
+import random # Binde random ein
+nimm_cmath = random.choice( (True, False) ) # Waehlt True oder False
+
+if nimm_cmath:  # Pruefe, ob das wir cmath importieren wollen
+  import cmath as m # Binde cmath ein und nenne es m.
+else:
+  import math as m  # Binde  math ein und nenne es m.
+
+print( m.sqrt(-1) ) # Druckt 1j wenn cmath eingebunden wurde
+                    # und bricht sonst mit einer Ausnahme ab.
+\end{lstlisting}
+
+Manchmal will oder muss man eine Hand voll Klassen, Objekte oder Funktionen aus einem Modul \lpy{hilfsmodul} in sein Programm einbinden und gleichzeitig auf das Präfix \lpy{hilfsmodul.} verzichten.
+Oft passiert das beim erstellen eines eigenen Moduls (was wir im nächsten Abschnitt behandeln).
+Um also eine endliche Menge von Objekten \lpy{obj_1, ..., obj_k} aus einem Modul \lpy{hilfsmodul} direkt einzubinden, nutzen wir den folgenden Code.
+\begin{lstlisting}
+from hilfsmodul import obj_1, ..., obj_k
+\end{lstlisting}
+Ähnlich wie eingebundene Module, kann man auch eingebundene Objekte mit \lpy{as} umbennen:
+\begin{lstlisting}
+from hilfsmodul import obj_1 as neuer_name_1, ..., obj_k as neuer_name_k
+\end{lstlisting}
+Schauen wir uns das an einem simplen Beispiel an:
+\begin{lstlisting}
+from math import sin as Sinus, cos as Cosinus, pi as PI
+
+x = Sinus(PI/3.0)
+y = Cosinus(PI/3.0)
+print( x, y ) # 0.8660254037844386 0.7071067811865476
+\end{lstlisting}
+
+
+
+

@@ -1,0 +1,141 @@
+\subsection{Funktionen definieren und aufrufen}
+\label{section:funktionen:funktionen_definieren_und_aufrufen}
+
+Funktionsdefinitionen in \Python haben folgende einfache Syntax:
+
+\begin{lstlisting}
+def funktionsname(par_1, ..., par_k, rap_1=wert_1, ..., rap_l=wert_l):
+  ausdruck
+  ...
+\end{lstlisting}
+
+Im Crashkurs, Abschnitt \ref{section:crashkurs:funktionen}, haben wir bereits eine vereinfachte Version der Funktionsdefinition gesehen und auch, dass man 
+Parametern Standardwerte zuweisen kann. Dies ist die allgemeine Form. Wir betonen noch einmal (weil es nicht häufig genug betont 
+werden kann), dass die Funktionsparameter keinen fest zugewiesenen Datentyp haben, auch nicht die, die einen Standardwert zugewiesen
+bekommen haben.
+
+Wie immer gilt, dass man eine gute Programmiererin daran erkennt, dass die Funktionen gut auskommentiert und dokumentiert sind.
+Die sinnvollste Art, eine Funktion (oder auch ein anderes Objekt) in Python zu dokumentieren ist der sogenannte Doc-String, der 
+direkt unter dem Funktionskopf steht und von jeweils drei doppelten Anführungszeichen pro Seite eingerahmt wird:
+
+\begin{lstlisting}
+def funktionsname(par_1, ..., par_k, rap_1=wert_1, ..., rap_l=wert_l):
+  """ Ausfuehrliche Dokumentation """
+  ausdruck
+  ...
+\end{lstlisting}
+
+Im Doc-String sollten - falls vorhanden - Eingabeparameter und Rückgabewerte der Funktion erklärt werden, sowie eventuelle Ausgaben.
+
+Der Vorteil des Doc-Strings im Vergleich zu konventionellen Kommenaren ist, dass \Python in der Lage ist, ihn mit Hilfe der 
+\lpy{help}-Funktion auszugeben. Dazu ruft man \lpy{help(funktionsname)} auf, woraufhin der Interpreter einen Editor öffnet 
+und den Funktionskopf zusammen mit dem Doc-String der Funktion anzeigt. Dieses Feature ist vor allem nützlich, wenn man direkt im 
+Interpreter programmiert und sich daran erinnern möchte, wie die Funktion zu benutzen ist. 
+
+Ein kleines Beispiel für eine Funktion, die keine Parameter bekommt und nichts (also immer \lpy{None}) zurückgibt, aber deshalb 
+nicht weniger dokumentiert werden sollte:
+
+\begin{lstlisting}
+import random
+def moechtegern_mathematiker():
+  """Approxomiert den Output eines moechtegern Mathematikers."""
+  if( random.random() < 0.5 ):
+    print("Aber das mit dem Einruecken ist doof!")
+  else:
+    print("Aber C hat eine bessere Laufzeit!")
+
+help(moechtegern_mathematiker)
+moechtegern_mathematiker()
+\end{lstlisting}
+
+Führt man diesen Code aus, so wird zunächst \lpy{help(moechtegern_mathematiker)} ausgeführt, d.h.\ es wird ein Editor 
+geöffnet, in dem Funktionskopf und Doc-String der Funktion \lpy{moechtegern_mathematiker()} angezeigt werden.
+Nachdem der Editor geschlossen wurde, wird die Funktion selbst ausgeführt. 
+
+Es ist möglich, Funktionen eine variable Anzahl von Parametern zu übergeben. Ein Stern vor einem der Parameternamen 
+signalisiert \Python, dass es hier eine nicht weiter spezifizierte Anzahl von Elementen zu erwarten hat. Diese Anzahl kann 
+auch Null sein. Man kann es sich so vorstellen, dass eine Liste von Argumenten erwartet wird, die natürlich auch leer sein 
+kann. 
+
+\begin{lstlisting}
+def funktionsname(parameter, *rest_als_liste):
+\end{lstlisting}
+
+Der \lpy{*}-Operator kann auch bei einem Funktionsaufruf verwendet werden. In diesem Fall schreibt man ihn vor eine 
+Sequenz (meistens vor einen Variablennamen) und signalisiert damit, dass man die Sequenz gerne ``entpacken'' möchte, 
+also ihre einzelnen Einträge der Funktion als Parameter übergeben möchte.
+
+Das folgende Beispiel zeigt beide Nutzvarianten des \lpy{*}-Operators in Funktionsdefinitionen und -aufrufen:
+
+\begin{lstlisting}
+import random
+def moechtegern_mathematiker( *gejammer ):
+  """Approxomiert den Output des lieblings moechtegern Mathematikers.
+     gejammer ist das lieblings Gejammer."""
+  print( random.choice(gejammer) )
+
+moechtegern_mathematiker("Aber C ist besser!", "Aber C++ ist besser!")
+
+lieblings_gejammer = (
+  "Aber das mit dem Einruecken ist doof!",
+  "Aber C hat eine bessere Laufzeit!",
+  "Aber wir koennen doch schon C++!",
+  "Aber wenn man reine Mathematik macht, braucht man keine Computer!",
+  "Aber im Internet steht, dass Python doof ist!",
+  "gcc Warnungen kann ich ignorieren, ich weiss ja was ich tue!",
+  "Aber ich kann doch schon Python, nur was ist dieses Objektorientiert?!"
+)
+
+moechtegern_mathematiker( *lieblings_gejammer )
+\end{lstlisting}
+
+Die Funktion \lpy{moechtegern_mathematiker} erwartet eine beliebige Anzahl an Parametern, bzw. sie erwartet als Parameter eine 
+entpackte Sequenz mit einer beliebigen Anzahl Einträge, die unter \lpy{gejammer} zusammengefasst sind. Aus diesen wählt sie einen 
+Eintrag zufällig aus und gibt ihn auf der Standardausgabe aus.
+
+Im ersten Aufruf der Funktion werden ihr zwei Strings als Parameter übergeben. Für den zweiten Funktionsaufruf wird zunächst die 
+Liste \lpy{lieblings_gejammer} definiert, die eine größere Anzahl an Strings enthält. Danach rufen wir die Funktion mit 
+\lpy{*lieblings_gejammer} auf, d.h.\ die Einträge der Liste werden entpackt und der Funktion als Argumente übergeben.
+
+Man kann den \lpy{*}-Operator auch zum Entpacken von Sequenzen verwenden, wenn die Funktion eine feste Anzahl von Parametern 
+erwartet. Natürlich muss man dann aufpassen, dass die Länge der Sequenz mit der Anzahl der erwarteten Parameter übereinstimmt.
+
+Es ist auch möglich, eine beliebige Anzahl von Schlüssel-Parameter-Paaren (also ein entpacktes Verzeichnis) zu übergeben. In der 
+Funktionsdefinition wird dies mit \lpy{**} vor dem Parameternamen angekündigt:
+
+\begin{lstlisting}
+def funktionsname(parameter, **rest_als_verzeichnis):
+\end{lstlisting}
+
+Wie auch mit Sequenzen (s.o.) hat man jetzt zwei Möglichkeiten, eine solche Funktion aufzurufen, nämlich einmal indem man die 
+Parameter direkt übergibt oder indem man ein Verzeichnis mit dem \lpy{**}-Operator entpackt. Das folgende Beispiel 
+zeigt dies etwas genauer:
+
+\begin{lstlisting}
+import random
+def moechtegern_mathematiker( **gejammer ):
+  """Approxomiert den Output des lieblings moechtegern Mathematikers.
+     gejammer ist das lieblings Gejammer."""
+  eigenschaft, adjektiv = random.choice(list(gejammer.items()))
+  print( "Aber " + eigenschaft + " ist " + adjektiv + "!" )
+
+moechtegern_mathematiker(C="besser", Python="doof")
+
+lieblings_gejammer = {
+  "Einruecken" : "doof",
+  "Laufzeit" : "doof",
+  "angewante Mathematik" : "auch doof",
+  "Freizeit" : "ganz doof",
+  "Algebra" : "besser"
+}
+
+moechtegern_mathematiker( **lieblings_gejammer )
+\end{lstlisting}
+
+Wenn man die Parameter direkt übergibt, erfolgt die Zuordung Schlüssel-Parameter nicht über den Doppelpunkt wie wenn man ein 
+Verzeichnis erstellt, sondern über ein Gleichheitszeichen.
+
+Wie auch bei Sequenzen ist es möglich, ein entpacktes Verzeichnis an eine Funktion zu übergeben, die eine feste Anzahl an 
+Argumenten erwartet. In diesem Fall muss man nicht nur darauf aufpassen, dass die Anzahl der Paare des Verzeichnisses mit 
+der Anzahl der erwarteten Argumente der Funktion übereinstimmt, sondern auch darauf, dass die Schlüssel im Verzeichnis mit 
+den Parameternamen übereinstimmen.

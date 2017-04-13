@@ -1,0 +1,104 @@
+\subsection{Verzeichnisse}
+\label{section:std_data_types:verzeichnisse}
+Objekte von Typ \lpy{dict} nennt man ``Verzeichnisse''.
+Ein Verzeichnis verhält sich wie eine partiell definierte mathematische Funktion,
+deren Definitionsbereich die Menge der ``hashbaren Objekte'' ist und deren Wertebereich die Menge aller Objekte ist.
+In anderen Worten:
+Genau wie partiell definierte Funktionen, kann man sich ein Verzeichnis \lpy{d} wie eine Menge von Tupeln \lpy{(key, d[key])} vorstellen,
+wobei die linke Seite eines jeden Tupels höchstens einmal als linke Seite vorkommt.
+Wenn man bei dieser Vorstellung bleibt, sagt man dass \lpy{d} auf \lpy{key} definiert ist, wenn \lpy{d} das Tupel \lpy{(key, d[key])} enthält.
+Diejenigen Objekte, auf denen ein Verzeichnis definiert ist, nennt man ``Schlüssel''.
+Schlüssel sind immer hashbare Objekte (siehe unten).
+Ist \lpy{key} ein Schlüssel einer Liste \lpy{d}, so ist \lpy{d[key]} ein ``Wert'' des Verzeichnisses \lpy{d}.
+
+Noch haben wir nicht erklärt, was hashbare Objekte sind.
+Hier sei gesagt, dass alle vom \Python Standard definierten Objekte hashbar sind, sofern sie immutable sind
+(also Objekte vom Typ \lpy{int}, \lpy{float}, \lpy{complex}, \lpy{tuple}, \lpy{str}, \lpy{bool} und \lpy{none},
+aber nicht \lpy{list} und \lpy{dict}).
+Wir erklären hashbare Objekte in Abschnitt \ref{section:klassen:hashbare_objekte}.
+
+
+\subsubsection{Verzeichnisse erstellen}
+\label{section:std_data_types:verzeichnisse:verzeichnisse_erstellen}
+Verzeichnisse können auf folgende Arten erstellt werden:
+\begin{lstlisting}
+# Leere Verzeichnisse
+verz1 = {}
+print(verz1)
+verz2 = dict()
+print(verz2)
+
+# Nichtleeres Verzeichnis
+verz3 = { key1 : value1, key2 : value2, key3 : value3, ... }
+print(verz3)
+\end{lstlisting}
+\lpy{verz1} und \lpy{verz2} sind leere Verzeichnisse, \lpy{verz3} verdeutlicht die Syntax eines nichtleeren Verzeichnisses. Die 
+``Schlüssel''-``Wert''-Paare werden durch Doppelpunkte getrennt, die Paare voneinander durch Kommata. Ein Beispiel für ein nichtleeres 
+Verzeichnis könnte folgendermaßen aussehen:
+\begin{lstlisting}
+#Verzeichnis speichert Telefonnummern:
+telefonbuch = {'Mama':1234, 'Papa':1234, 'Tina':4242, 'Peter':'Keine Nummer'}
+\end{lstlisting}
+
+Außerdem kann man ein Verzeichnis aus einer Liste von Tupeln erstellen (solange die linke Seite eines jeden Tupels ein hashbares Objekt ist).
+Hier ein Beispiel:
+\begin{lstlisting}
+verz_eins = { 42 : 'Wahrheit', True : 'Wahrheit' }
+verz_zwei = dict([(42, 'Wahrheit'), (True, 'Wahrheit')])
+print(verz_eins, verz_zwei)
+\end{lstlisting}
+
+
+\subsubsection{Verzeichnisse nutzen}
+\label{section:std_data_types:verzeichnisse:verzeichnisse_nutzen}
+Mit den folgenden Funktionen, kann man sich die Größe eines Verzeichnisses \lpy{d} ausgeben lassen,
+auf Werte zugreifen, sowie (neue) Schlüssel-Wert Paare setzen oder löschen.
+\begin{lstlisting}
+len(d)        # Groesse des Verzeichnisses
+d[key]        # Gibt den Wert d[key] zurueck oder loest eine Ausnahme aus
+d.get(key, x) # Gibt den Wert d[key] zurueck falls er existiert. Sonst
+              # wird das Paar (key, x) erstellt und x zurueckgegeben.
+d[key] = wert # Setzt d[key] auf wert (auch wenn key noch nicht existiert)
+del d[key]    # Entfernt (key, d[key]) oder loest eine Ausnahme aus
+d.pop(key, x) # Entfernt (key, d[key]) und gibt d[key] zurueck falls es
+              # existiert. Sonst wird x zurueckgegeben.
+d.popitem()   # Entfernt bel. Paar (key, d[key]) und gibt d[key] zurueck
+d.clear()     # Entfernt alle Paare aus dem Verzeichniss.
+\end{lstlisting}
+Um nachzuschauen, ob ein Schlüssel in einem Verzeichniss \lpy{d} definiert ist oder nicht nutzen wir die folgenden Operationen.
+\begin{lstlisting}
+key in d      # Gibt True  zurueck gdw key ein Schluessel von d ist
+key not in d  # Gibt False zurueck gdw key ein Schluessel von d ist
+\end{lstlisting}
+Eine oberflächeliche Kopie eines Verzeichnisses \lpy{d} zu erstellen, benutzt man die folgende Operation.
+\begin{lstlisting}
+d.copy()
+\end{lstlisting}
+Die Konzepte der oberflächlichen und tiefen Kopien sowie die daraus resultierenden Konsequenzen erklären wir in Abschnitt \ref{section:std_data_types:sequenzen:kopien} am Beispiel der Listen.
+Analoge Aussagen gelten für Verzeichnisse.
+
+An dieser Stelle gehen wir noch ein wenig auf die Gleichheit von Verzeichnissen ein.
+Der Vergleich \lpy{s == t} wertet genau dann als \lpy{True} aus, wenn die Paare von \lpy{s} und \lpy{t} übereinstimmen.
+Das heißt aber nicht, dass \lpy{s} und \lpy{t} dieselbe Identität haben, also an der selben Stelle im Speicher stehen.
+Hier ein Beispiel.
+\begin{lstlisting}
+s = {1: 'Eins'}
+t = {1: 'Eins'}
+print( s == t )          # True
+print( id(s) )           # 140601528318536
+print( id(t) )           # 140601528344776
+\end{lstlisting}
+
+Um eine Sequenz der Schlüsse, der Werte oder der Schlüssel-Wert-Paare eines gegebenen Verzeichnisses \lpy{d} zu erhalten, nutzen wir die folgenden Operationen.
+\begin{lstlisting}
+d.keys()   # Gibt eine Sequenz der Schluessel zurueck
+d.values() # Gibt eine Sequenz der Werte zurueck
+d.items()  # Gibt eine Sequenz der Schluessel-Wert-Paare zurueck
+\end{lstlisting}
+Zum Beispiel druckt man die Schluessel-Wert-Paare eines Verzeichnisses \lpy{d} so aus:
+\begin{lstlisting}
+d = { 42 : 'Wahrheit', True : 'Wahrheit' }
+
+for key,val in d.items():
+  print("Schluessel: '{}', Wert: '{}'".format(key, val))
+\end{lstlisting}

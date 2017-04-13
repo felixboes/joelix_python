@@ -1,0 +1,42 @@
+\subsection{Dateien}
+\label{section:std_data_types:file}
+In \Python ließt und schreibt man in Dateien ganz ähnlich wie in \CC.
+Man öffnet eine Datei, ließt oder schreibt und schließt die Datei sobald man sie nicht mehr braucht.
+
+Das Öffnen funktioniert durch Aufrufen der Funktion:
+\begin{lstlisting}
+open(file, mode='r')
+\end{lstlisting}
+Dabei ist \lpy{file} der Pfad der zu öffenden Datei und \lpy{mode} ist der sogenannte Modus.
+Die wichtigsten Modi fassen wir hier zusammen.
+\begin{lstlisting}
+'r' # Lesenzugriff
+'w' # Schreibzugriff: alter Inhalt wird ueberschrieben
+'a' # Schreibzugriff: beginne am Ende der alten Datei
+\end{lstlisting}
+Will man Lese- und Schreibzugriff haben, hängt man an \lpy{'r'}, \lpy{'w'} oder \lpy{'a'} das Zeichen \lpy{'+'} an.
+Also benutzen wir \lpy{'r+'} und \lpy{'w+'} für Lese- und Schreibzugriff, wobei wir am Anfang der Datei anfangen und
+wir benutzen \lpy{'a+'} für Lese- und Schreibzugriff, wobei wir am Ende der Datei anfangen.
+
+Eine Datei \lpy{datei} schließt man wie folgt:
+\begin{lstlisting}
+datei.close() # Schliesse die Datei.
+\end{lstlisting}
+
+Es gibt einfache Möglichkeiten um aus einer geöffneten Datei \lpy{datei} zu lesen.
+Entweder man ließt sie zeilenweise aus \lpy{datei.readline(size=1)} oder man ließt sie zeichenweise aus \lpy{datei.read(size=1)}.
+Insbesondere ließt \lpy{datei.readline()} eine Zeile und \lpy{datei.read()} ließt ein Zeichen.
+Praktischerweise verhält sich eine geöffnete Datei wie eine Sequenz, das heißt, wir können sie ganz einfach mit in einer Schleife auslesen.
+In folgendem lesen und drucken wir eine Datei zeilenweise aus.
+\begin{lstlisting}
+datei = open('dateiname.txt', 'r') # Oeffne die Datei 'dateiname.txt'
+for zeile in datei:                # Fuer jede Zeile in der Datei
+  print(zeile)                     # Drucke die Zeile aus
+datei.close()                      # Schliesse die Datei.
+\end{lstlisting}
+
+In eine Datei schreiben wir wie folgt:
+\begin{lstlisting}
+datei.write(string)
+datei.writelines(liste_von_strings)
+\end{lstlisting}

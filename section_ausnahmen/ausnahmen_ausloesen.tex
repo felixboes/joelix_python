@@ -1,0 +1,108 @@
+\subsection{Ausnahmen auslösen und weitergeben}
+\label{section:ausnahmen:ausnahmen_ausloesen}
+Wir wollen nun verstehen, wie man Ausnahmen auslöst und wie Ausnahmen weitergegeben werden.
+Beides geschieht mit \lpy{raise}.
+
+Man löst eine Ausnahme vom Typ \lpy{Ausnahmetyp} mit dem beschreibenden String \lpy{ausnahmestring} durch folgendes Statement aus:
+\begin{lstlisting}
+raise Ausnahmetyp(ausnahmestring)
+\end{lstlisting}
+Wenn man sein Programm sehr trotzig abbrechen möchte kann man das also so tun:
+\begin{lstlisting}
+raise RuntimeError("Mir ist jetzt alles egal!")
+\end{lstlisting}
+Im folgenden Beispiel definieren wir eine Funktion, die nur mit Strings und Ganzzahlen umgehen möchte:
+\begin{lstlisting}
+def ich_mag_nur_strings_und_ganzzahlen( x ):
+  """Diese Funktion mag nur Strings und Ganzzahlen."""
+  if not (type(x) is int or type(x) is str):
+    raise ValueError("Ich mag nur Strings und Ganzzahlen")
+  print("Ich mag dich: '{}'".format(x))
+\end{lstlisting}
+
+Nun klären wir die Frage:
+\begin{center}
+  Wem wird eine Ausnahme zum Behandeln eigentlich übergeben?
+\end{center}
+Zuerst führen wir den sogenannten \emph{Call Tree} eines Programms ein.
+Der Call Tree ist bei sequenziellen Programmen das ohne ausgelöse Ausnahmen auskommt immer ein gewurzelter Baum.
+Die Wurzel $v$ ist die main-Funktion (oder genauer das main-Modul).
+Wird eine Funktion \lpy{f} aufgerufen, definiert das eine Kante mit einem neuen Knoten in unserem Baum, den wir hier der Einfachheit halber $v(f)$ nennen.
+Die in \lpy{f} aufgerufenen Funktionen, sagen wir \lpy{g}, \lpy{h} oder vielleicht sogar \lpy{f}, definieren dann neue Kanten zu neuen Knoten, sagen wir $v(g,f)$, $v(h,f)$, $v(f,f)$.
+Wird eine Funktion \lpy{k} mehrere Male hintereinander aufgerufen, erstellen wir für jeden Aufruf eine neue Kante mit einem neuen Endknoten.
+
+Per Konstruktion entspricht jede Kante einem Funktionsaufruf.
+Braucht man $k$ Kanten um von der Wurzel $v$ zu einem anderen Knoten $w$ zu kommen, bedeutet dass wir $k$ ineinander verschachtelte Funktionsaufrufe benötigt haben.
+
+Also entsteht zur Programmlaufzeit ein gewurzelter Baum.
+Zu einem festen gewählen Zeitpunkt, während das Programm läuft, gibt es immer einen Knoten, der zuletzt erstellt wurde.
+Diesen Knoten nennen wir ``aktiv''.
+Der aktive Knoten entspricht dem Programmabschnitt, in dem wir uns (zur festgelegten Laufzeit) befinden.
+
+Nun können wir leicht verstehen, wem eine Ausnahme zum Behandeln übergeben wird.
+Dazu nehmen wir uns den Call Tree das laufende Programm zur Hilfe.
+Wird eine Ausnahme in einem Programmabschnitt ausgelöst, so entspricht dieser Programmabschnitt dem aktiven Knoten.
+Die Ausnahme kann dann vom aktiven Knoten behandelt werden, falls der Programmabschnitt im einem \lpy{try-except} Konstrukt liegt.
+Außerdem muss die Ausnahme in ihrem \lpy{except} Abschnitt behandelt werden.
+Ist mindestens eins von beiden nicht der Fall, wird die Ausnahme an den Knoten über dem aktiven Knoten zum Behandeln weitergeben.
+Dies wird so lange fortgeführt, bis die Ausnahme behandelt wurde oder bis sie schlussendlich auch in der Wurzel nicht behandelt wurde.
+Im letzteren Fall erklärt der \Python-Interpreter wo die Ausnahme aufgetreten ist und beendet das Programm.
+
+Man kann sogar Ausnahmen behandeln und nach der Behanlung die Ausnahme mit \lpy{raise} an den darüberliegenden Knoten weitergeben.
+Das besprechen wir an dieser Stelle aber nicht ausführlicher.
+
+Schauen wir uns das ganze mal anhand eines Beispiels an:
+\begin{lstlisting}
+def drucke_float_aus(zahl): # Druckt float aus oder loest Ausnahme aus
+  if type(zahl) is not float:
+    raise TypeError('Ich will float und sonst nichts.')
+  else:
+    print('{}, ich liebe dich'.format(zahl))
+
+def eins_durch_null(): # Teilt durch Null
+  return (1.0/0.0)
+
+def behandle_ausnahmen_nicht(): # Behandelt Ausnahmen nicht
+  eins_durch_null()             # Ausnahme wird nicht behandelt
+
+def behandle_ausnahmen():
+  try:
+    drucke_float_aus('Hallo!')
+  except:
+    print('Ausnahme an Stelle 1 wurde ausgeloest')
+  
+  try:
+    drucke_float_aus(eins_durch_null())
+  except:
+    print('Ausnahme an Stelle 2 wurde ausgeloest')
+  
+  try:
+    behandle_ausnahmen_nicht()
+  except:
+    print('Ausnahme an Stelle 3 wurde ausgeloest')
+\end{lstlisting}
+Beim Aufruf der Funktion \lpy{behandle_ausnahmen()} versuchen wir zunächst, die Funktion \lpy{drucke_float_aus('Hallo!')} auszuführen.
+Diese löst eine Ausnahme aus, die wir in \lpy{behandle_ausnahmen()} abfangen.
+In der Ausnahmebehandlung drucken wir:
+\begin{center}
+\lpy{'Ausnahme an Stelle 1 wurde ausgeloest'} 
+\end{center}
+Nun versuchen wir \lpy{drucke_float_aus(eins_durch_null())} auszuführen.
+Dabei wird zuerst die innere Funktion, also \lpy{eins_durch_null()} ausgeführt.
+Diese löst eine Ausnahme aus.
+Insbesondere gibt die Funktion \lpy{eins_durch_null()} nichts zurück denn die normale Ausführung wird unterbrochen und wir machen sofort mit der Fehlerbehandlung weiter.
+In der Ausnahmebehandlung drucken wir:
+\begin{center}
+\lpy{'Ausnahme an Stelle 2 wurde ausgeloest'}
+\end{center}
+Nun versuchen wir \lpy{behandle_ausnahmen_nicht()} auszuführen.
+Diese Funktion ruft \lpy{eins_durch_null()} aus.
+In unserem Call Tree haben wir momentan also einen Weg von \lpy{behandle_ausnahmen} über \lpy{behandle_ausnahmen_nicht} zu \lpy{eins_durch_null}.
+Die Funktion \lpy{eins_durch_null} löst eine Ausnahme aus.
+Diese wird an \lpy{behandle_ausnahmen_nicht} weitergegeben und dort nicht behandelt.
+Also wird sie weitergegeben an \lpy{behandle_ausnahmen}.
+Dort wird sie behandelt.
+In der Ausnahmebehandlung drucken wir:
+\begin{center}
+\lpy{'Ausnahme an Stelle 3 wurde ausgeloest'}
+\end{center}

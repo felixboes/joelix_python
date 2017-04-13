@@ -1,0 +1,88 @@
+\subsection{Mengen}
+\label{section:std_data_types:mengen}
+In Gegensatz zu Sequenzen, die wir im Abschnitt \ref{section:std_data_types:sequenzen} behandelt haben, sind Mengen ``ungeordnete Container''.
+Ähnlich wie bei Cantor, verstehen wir unter einer Menge die Zusammenfassung von bestimmten, wohlunterschiedenen Objekten zu einem Ganzen.
+Allerdings verhalten sich Mengen in \Python anders als ``mathematische Mengen'' (sie erfüllen zum Beispiel nicht das Extensionalitätsaxiom, i.e.\ sie sind nicht eindeutig durch ihre Elemente bestimmt).
+Das spielt in der Praxis keine Rolle und ist gerüchten zu Folge nur für zwangsgestörte Möchtegernmathematiker ein Problem.
+
+
+\subsubsection{Mengen erzeugen}
+\label{section:std_data_types:mengen:mengen_erzeugen}
+Eine Menge kann aus einer (möglicherweise) leeren Sequenz erzeugt werden, sofern jedes Element der Sequenz ``hashbar'' ist.
+In Abschnitt \ref{section:klassen:hashbare_objekte} erklären wir genauer, was ``hashbare Objekte'' sind.
+Für den Moment begnügen wir uns damit, dass die Standardtypen genau dann hashbar sind, wenn sie immutable sind.
+Mengen selbst können entweder mutable oder immutable sein.
+Die mutable Variante ist \lpy{set}, die immutable Variante ist \lpy{frozenset}.
+
+Um eine Menge zu erzeugen, welche die Objekte \lpy{4}, \lpy{'Python'} und \lpy{None} zu enthält, rufen wir \lpy{set} mit einer Liste oder einem Tuple das diese Elemente enthält auf.
+\begin{lstlisting}
+s = set( [4, 'Python', None] )
+\end{lstlisting}
+
+
+\subsubsection{Operationen für set und frozenset}
+\label{section:std_data_types:mengen:operationen_fuer_set_und_frozenset}
+Folgende Operationen verändern die Menge nicht und stehen somit sowohl \lpy{set} als auch \lpy{frozenset} zur Verfügung.
+\begin{lstlisting}
+len(s)          # Gibt die Anzahl der Elemente zurueck
+x in s          # True  gdw x in s vorkommt
+x not in s      # False gdw x in s vorkommt
+s == t          # True gdw ihre Elemente uebereinstimmen
+s.isdisjoint(t) # True gdw s und t disjunkt sind
+s <= t          # True gdw s eine Teilmenge von t ist
+s < t           # True gdw s eine echte Teilmenge von t ist
+s >= t          # True gdw t eine Teilmenge von s ist
+s > t           # True gdw t eine echte Teilmenge von s ist
+s | t | ...     # Die Vereinigung von s und t und ...
+s & t & ...     # Der Schnitt von s und t und ...
+s - t - ...     # Die Differenz von s und t und ...
+s ^ t           # Die Symmetrische Differenz von s und t
+s.copy()        # Erstelle eine oberflaechliche Kopie von s
+\end{lstlisting}
+Die Konzepte der oberflächlichen und tiefen Kopien sowie die daraus resultierenden Konsequenzen erklären wir in Abschnitt \ref{section:std_data_types:sequenzen:kopien} am Beispiel der Listen.
+Analoge Aussagen gelten für Mengen.
+
+An dieser Stelle gehen wir noch ein wenig auf die Gleichheit von Mengen ein.
+Wie gesagt, wertet \lpy{s == t} genau dann als \lpy{True} aus, wenn die Elemente von \lpy{s} und \lpy{t} übereinstimmen.
+Das heißt aber nicht, dass \lpy{s} und \lpy{t} dieselbe Identität haben, also an der selben Stelle im Speicher stehen.
+Hier ein Beispiel.
+\begin{lstlisting}
+s = set( range(1,11,1) ) # Die Menge {1,2,...,10}
+t = set( range(1,11,1) ) # Die Menge {1,2,...,10}
+print( s == t )          # True
+print( id(s) )           # 139836709444296
+print( id(t) )           # 139836709038568
+\end{lstlisting}
+
+
+\subsubsection{Operationen für set}
+\label{section:std_data_types:mengen:operationen_fuer_set}
+Jede Menge \lpy{s} vom Typ \lpy{set} ist mutable.
+Das heißt, \lpy{s} ist ein Objekt, der Wert von \lpy{s} ist die Menge seiner Elemente und wir können den Wert von \lpy{s} verändern.
+Dazu stehen uns folgende Operationen bereit.
+\begin{lstlisting}
+s |= t | ... # Erweitert die Menge s um t, ...
+s &= t & ... # Entfernt alle Elmente aus s, die nicht in t,... sind
+s -= t | ... # Entfernt alle Elemente aus s, die in t, ... sind
+s ^= t       # Entfernt alle Elemente aus s, die nicht gleichzeitig
+             # in s und t sind
+add(e)       # Erweitert s um e
+remove(e)    # Entfernt e aus s; loest KeyError aus, wenn e nicht in s ist
+discard(e)   # Entfernt e aus s falls e in s ist
+pop()        # Entfernt ein Element aus s und gibt es zurueck
+clear()      # Entfernt alle Elemente aus s
+\end{lstlisting}
+
+Wir bemerken hier nochmal, dass die Operationen nur den Wert der Menge \lpy{s} verändern, die Identität \lpy{id(s)} bleibt bestehen.
+\begin{lstlisting}
+s = set( range(1, 6,1) ) # Die Menge {1,2,...,5}
+t = set( range(6,11,1) ) # Die Menge {5,6,...,10}
+print( id(s) )           # 139836709038792
+print( id(t) )           # 139836709444296
+s.add(11)                # Fuege zu s das Element 11 hinzu
+print( id(s) )           # 139836709038792
+print( id(s |  t) )      # 139836709037448
+s |= t                   # Fuege zu s die Elemente 5,6,...,10 hinzu
+print( id(s) )           # 139836709038792
+\end{lstlisting}
+Insbesondere sind die Objekte \lpy{s |= t} und \lpy{s = s | t} verschieden.

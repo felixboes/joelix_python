@@ -1,0 +1,29 @@
+\subsection{None}
+\label{section:std_data_types:none}
+Es gibt genau ein Objekt \lpy{None} vom sogenannte Typ \lpy{NoneType}.
+Man benutzt dieses Objekt um die Abwesenheit eines Werts oder eines Parameters auszudrücken.
+Zum Beispiel ist \lpy{None} der Rückgabetyp einer Funktion, die zurückkehrt ohne ein Objekt mit \lpy{return} zurückzugeben.
+Hier ein Beispiel:
+\begin{lstlisting}
+def ich_geb_nix_zurueck():
+  print("Ich hab nix")
+
+x = ich_geb_nix_zurueck()
+print( type(x) )
+\end{lstlisting}
+
+Ganz oft wird \lpy{None} als Standardparameter für optionale Parameter einer Funktion festgelegt.
+Damit lässt sich mit ganz leicht prüfen, ob der Benutzer einen optionalen Parameter übergeben hat oder nicht.
+Hier ein simples Beispiel:
+\begin{lstlisting}
+def sprich_falls_du_was_zu_sagen_hast( was=None ):
+  if was is None: # Behandle als ob nichts uebergeben wurde
+    print("Ich hab nix zu sagen!")
+  else:           # Behandle als ob etwas uebergeben wurde
+    print("Ich hab was zu sagen: '{}'.".format(was))
+
+sprich_falls_du_was_zu_sagen_hast()     # Ich hab nix zu sagen!
+sprich_falls_du_was_zu_sagen_hast(None) # Ich hab nix zu sagen!
+sprich_falls_du_was_zu_sagen_hast(42)   # Ich hab was zu sagen: '42'.
+\end{lstlisting}
+

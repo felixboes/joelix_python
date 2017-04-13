@@ -1,0 +1,83 @@
+\subsection{Funktionen sind auch nur Objekte}
+\label{section:funktionen:funktionen_sind_objekte}
+Wir wiederholen hier nochmal, dass Funktionen Objekte sind.
+Insbesondere können sie Argumente einer anderen Funktion \lpy{F} sein.
+
+Schauen wir uns ein einfaches Beispiel an.
+Angenommen, wir haben eine aufwendige Funktion \lpy{aufwendige_funk}, die \lpy{k} Parameter braucht.
+Daraus wollen wir eine neue Funktion bauen,
+die genau dasselbe macht und genau dasselbe zurückgibt, aber noch zusätzlich die CPU-Zeit misst und ausdruckt.
+Dazu schreiben wir eine neue Funktion \lpy{zeit_messen}, die als erstes Argument eine Funktion \lpy{f} bekommt
+und als zweites Argument ein Verzeichniss \lpy{vargs} welches den Parametern der Funktion \lpy{f} entsprechen soll.
+Innerhalb von \lpy{zeit_messen} nehmen wir erstmal die CPU-Zeit.
+Dann rufen wir \lpy{f} mit den Parametern \lpy{vargs} auf und speichern die Rückgabe in \lpy{rueckgabe}.
+Dann nehmen wir wieder die CPU-Zeit und drucken die Differenz aus.
+Zu guter Letzt geben wir \lpy{rueckgabe} zurück.
+Der Code sieht also so aus:
+\begin{lstlisting}
+import time
+
+def aufwendige_funk(par_1, ... par_k):
+  # Aufwendige Funktion
+
+def zeit_messen( f, **vargs ):
+  start = time.process_time ()
+  rueckgabe = f( **vargs )
+  dauer = time.process_time() - start
+  print("Die Funktion '{}' hat {} Sekunden CPU-Zeit verbraucht".format(
+    f.__name__, dauer))
+  return rueckgabe
+
+parameter = {'par_1' : ... }
+zeit_messen(aufwendige_funk, parameter)
+\end{lstlisting}
+
+Ein ganz wesentlicher Unterschied zwischen \C und \Python ist, dass man in \Python beliebige Funktionen zur Laufzeit erstellen kann.
+Das ist in \C nicht möglich und in \CPP erst ab \CPPElf.
+Schauen wir uns ein eifnaches Beispiel an.
+Aus der Mathematik kennen wir die Ableitungsfunktion:
+\[
+  \frac{d}{dt} \colon C^\infty(\mathbb R) \to C^\infty( \mathbb R) \quad\quad \frac{df}{dt}(x) = \lim_{t \to 0} \frac{f(x+t) - f(x)}{(x+t)-x}
+\]
+Diese nimmt eine glatte Funktion $f$ und definiert eine neue Funktion $df/dt$.
+Das können wir in \Python ganz genauso machen:
+\begin{lstlisting}
+def ableiten(f, dt=1e-4):
+  dt = float(dt)        # Interpretiert dt als float
+  def df_dt(x):         # Definiert df/dt
+    df = f(x+dt) - f(x)
+    return df / dt
+  return df_dt          # Gibt df/dt zurueck
+
+def g(t):               # Definiert g(x) = x*x/2
+  return t*t/2.0
+
+h = ableiten(g)         # Approx. die Ableitung von g, also h(x) ~ x
+\end{lstlisting}
+Unsere Funktion \lpy{ableiten} dient hier nur zur Demonstration.
+Für numerische Berechnungen taugt sie nichts, da wir uns nicht um Auslöschung kümmern.
+
+Für den Fall, dass wir eine Funktion definieren möchten, die nur aus einem einzigen Ausdruck besteht (der dann zurückgegeben wird), können wir folgende Abkürzung benutzen.
+Genauer, gehen wir davon aus, dass wir folgende Funktion haben:
+\begin{lstlisting}
+def f(par_1, ..., par_k):
+  return ausdruck
+\end{lstlisting}
+Dann ist diese Funktionsdefinition äquivalent zu:
+\begin{lstlisting}
+f = lambda par_1, ..., par_k : ausdruck
+\end{lstlisting}
+So definierte Funktionen nennt man ``Lambdafunktionen''.
+Man soll sie dann und nur dann benutzen, wenn der Code dadurch leserlicher wird.
+Unser Ableitungsbeispiel sieht mit Lambdafunktionen so aus:
+\begin{lstlisting}
+def ableiten(f, dt=1e-4):
+  dt = float(dt)        # Interpretiert dt als float
+  return lambda x : (f(x+dt)-f(x))/dt
+
+def g(t):               # Definiert g(x) = x*x/2
+  return t*t/2.0
+
+h = ableiten(g)         # Approx. die Ableitung von g, also h(x) ~ x
+\end{lstlisting}
+

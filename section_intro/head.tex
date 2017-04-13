@@ -1,0 +1,88 @@
+\section{Einleitung}
+\label{section:intro}
+
+Bei vielen Anwendungen in der wissenschaftlichen Programmierung sind übersichtlicher, handlicher Code und eine schnell mögliche 
+Implementierung, für die man auf viele verschiedene, bereits vorhandene, gute Bibliotheken zugreifen kann, wichtiger als 
+Schnelligkeit und optimierter Speicherverbrauch. 
+
+Wer sehr viel Wert auf die letzten beiden Eigenschaften legt, ist zum Beispiel mit \CC als Programmiersprache der Wahl gut beraten 
+(siehe auch die erste Hälfte dieses sehr guten Kurses \cite{joelixC}). In den meisten Fällen bringt einen \Python jedoch schneller ans 
+Ziel.
+
+Eine der Hauptmotivationen von \Python ist es, eine besonders übersichtliche, gut lesbare und einfache Programmiersprache zu sein. 
+Die Syntax ist deshalb sehr reduziert und \Python kommt mit wenigen Schlüsselwörtern aus. Die überschaubare Standardbibliothek ist leicht 
+zu erweitern -- tatsächlich ist einer der größten Vorteile von \Python die große Fülle an bereits existierenden Modulen und Bibliotheken,
+die einem als Nutzer sehr viel Zeit bei der Programmierung ersparen können (mehr dazu kann in \textbf{Abschnitt \ref{section:module}}
+nachgelesen werden).
+
+Diese Erweiterbarkeit von \Python sorgt auch dafür, dass Nachteile (wie zum Beispiel die im Vergleich zu maschienennäheren Sprachen 
+eher langsame Performance) ausgeglichen werden können. Beispielsweise können performancekritische Routinen in \C implementiert 
+und in \Python eingebunden werden um die Vorteile beider Sprachen verbinden zu können (zusammengefasst in \textbf{Tabelle 
+\ref{tabelle:effizienz}}). 
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|c|c|c|}
+   \hline
+                               & Code schnell schreiben & Schnellen Code schreiben\\\hline
+   \Python                     &           +            &           -             \\
+   \CC                         &           -            &           +             \\
+   \Python + \C = $\heartsuit$ &           +            &           +             \\
+   \hline
+\end{tabular}
+\caption{Die awesome Effizienzmatrix}
+\label{tabelle:effizienz}
+\end{table}
+
+\Python ist keine kompilierte, sondern eine interpretierte Sprache. Der aus \CC bekannte Ablauf Code schreiben -- kompilieren -- 
+ausführen entfällt also in der Form. Stattdessen wird der Programmcode dem sogenannten \textbf{Interpreter} übergeben. Hierbei hat man 
+zwei Möglichkeiten zur Auswahl: entweder man schreibt den Code direkt in den Interpreter, der die einzelnen Codeblöcke daraufhin sofort 
+ausführt, oder man übergibt ihm den Code gebündelt in einer Datei (man hat zudem noch die Möglichkeit, diese Datei direkt ausführbar 
+zu machen). Mehr zur Nutzung und Installation von \Python findet sich in \textbf{Anhang \ref{section:installation}}. 
+
+Diese Vorlesung und das begleitende Skript haben zum Ziel, in die Programmiersprache \PythonDrei einzuführen. Dabei richten wir uns 
+vor allem an Programmiererinnen, die bereits (fortgeschrittene) Erfahrungen in \CC haben. Es ist jedoch auch möglich, die Vorlesung 
+ohne weitreichende Programmierkenntnisse zu besuchen. Der Kurs richtet sich an Bachelorstudenten der Mathematik, die begleitenden 
+Übungen sind daher meist mathematisch motiviert.
+
+Aufgrund der knappen Zeit besprechen wir in diesem Skript nur einige Grundlagen von \Python.
+Der interessierten Leserin legen wir den \Python-Standard \cite{Python2} und \cite{Python3} aufgrund der hohen Präzision sehr ans Herz.
+Das Buchprojekt \cite{LottPython}, welches sich ``nur'' auf \PythonZwei bezieht, ist ebenso (vor allem für weniger erfahrene 
+Programmiererinnen) zu empfehlen, da es ausführlich ist, viele gute Beispiele enthält und kaum Programmierkenntnisse voraussetzt.
+
+\vspace{1em}
+
+Dieses Skript ist wie folgt aufgebaut:
+
+In \textbf{Abschnitt \ref{section:datamodel}} erklären wir den wesentlichen konzeptionellen Unterschied zwischen \Python und 
+\CC, das \Python-Datenmodel, bevor wir in \textbf{Abschnitt \ref{section:crashkurs}} die grundlegenden 
+Bausteine von \Python zusammenfassen. Dieser Crashkurs hat vor allem zum Ziel, Besonderheiten der Syntax aufzuzeigen um bereits 
+erfahreneren Programmiererinnen den Einstieg in \Python zu erleichtern. Grundlegende Konzepte wie Bedingungen, Schleifen, Ausgabe 
+und Funktionen werden nicht konzeptionell wiederholt.
+
+Die Datentypen, mit denen man in \Python am häufigsten arbeitet, werden in \textbf{Abschnitt \ref{section:std_data_types}} behandelt.
+Diese umfassen unter anderem Zahlen, Sequenzen, Mengen, Verzeichnisse und den Umgang mit Dateien. Zu jedem Datentyp listen wir die 
+wichtigsten Operationen und Funktionen auf.
+
+Einige Erklärungen zum Namespace befinden sich in \textbf{Abschnitt \ref{section:namespacing}}. Diese sind notwendig um den Umgang 
+mit Variablen in den folgenden Abschnitten besser verstehen zu können.
+
+\textbf{Abschnitt \ref{section:funktionen}} widmet sich der Syntax von Funktionen in \Python. Neben Funktionsdefinitionen und -aufrufen 
+gibt es noch ein paar Bemerkungen zur Erstellung einer \lpy{main}-Funktion in \Python, sowie den Vorteilen die sich ergeben, wenn 
+man Funktionen als Objekte auffasst.
+
+Neben Funktionen sind Klassen eine weitere Möglichkeit, Code übersichtlicher zu gestalten und einfacher nutzbar zu machen. Genauere 
+Erklärung zur Syntax, Aufbau und Nutzung von Klassen finden sich in \textbf{Abschnitt \ref{section:klassen}}.  
+
+Ein wichtiger Aspekt des Programmierens ist die Fehlerbehandlung. Diese wird in \Python durch Ausnahmebehandlung vereinfacht, die in 
+\textbf{Abschnitt \ref{section:ausnahmen}} ausführlich besprochen wird.
+
+Wie bereits in der Einleitung erwähnt ist einer der größten Vorteile von \Python die riesige Vielfalt an bereits vorhandenen Modulen.
+Einen Überblick über der nützlichsten Module die der \Python Standard für Mathematiker bereit hält sowie Anmerkungen zur Nutzung von Modulen 
+finden sich in \textbf{Abschnitt \ref{section:module}}.
+
+Zum Abschluss, in \textbf{Abschnitt \ref{section:python_mit_c}} gehen wir noch auf die Möglichkeit ein, bereits vorhandenen 
+\CC-Code und sogar bereits kompilierte Bibliotheken mit \Python zu verbinden und somit das beste aus beiden Welten zu vereinen.
+
+In \textbf{Anhang \ref{section:installation}} finden sich zum Schluss noch einige Hinweise zur Installation von 
+\Python unter verschiedenen Betriebssystemen.

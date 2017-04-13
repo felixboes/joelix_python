@@ -1,0 +1,20 @@
+\subsection{bool}
+\label{section:std_data_types:bool}
+Es gibt genau zwei Objekte vom Typ \lpy{bool}.
+Sie sind durch ihren Wert \lpy{True} und \lpy{False} eindeutig bestimmt.
+Außerdem sind sie immutable.
+
+Als \lpy{False} interpretiert \Python die folgende Werte:
+Zahlen \lpy{0} und \lpy{0.0};
+leere Mengen (ja, leere Menge{\bfseries n}, i.e.\ Objekte vom Typ \lpy{set}, deren Wert mit dem Wert \lstinline[style=Pyinline]|{}| übereinstimmt (selbst wenn ihre Identitäten verschieden sind));
+leere Sequenzen \lpy{''}, \lpy{()} und \lpy{[]};
+und leere Verzeichnisse.
+Allgemein kann man ein Objekt vom Typ \lpy{x} genau dann als \lpy{bool} interpretiert werden, wenn die zu \lpy{x} gehörige Klasse über eine Memberfunktion \lpy{__bool__} verfügt.
+Was das genau heißt, wird im Abschnitt \ref{section:klassen} erklärt.
+
+Es gibt folgende boolschen Operationen.
+\begin{lstlisting}
+x or  y # y wird nur ausgewertet wenn x False ist
+x and y # y wird nur ausgewertet wenn x True ist
+  not x # False wenn x True ist und True wenn x False ist
+\end{lstlisting}

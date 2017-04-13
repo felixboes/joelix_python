@@ -1,0 +1,51 @@
+\subsection{Zahlen}
+\label{section:std_data_types:zahlen}
+In \Python gibt es die numerischen Typen \lpy{int}, \lpy{bool}, \lpy{float} und \lpy{complex}.
+Objekte dieses Typs sind immer ``immutable''.
+
+Die \Python-Typen \lpy{int}, \lpy{float} und \lpy{complex} verhalten sich ähnlich wie die \CC-Typen \lcpp{int}, \lcpp{float} und \lcpp{complex}.
+Hier die wichtigsten Operationen.
+\begin{lstlisting}
+x + y  # Summe von x und y
+x - y  # Differenz von x und y
+x * y  # Produkt von x und y
+x / y  # Quotient von x and y
+x // y # Abgerundeter Quotient x und y
+x % y  # Rest von x / y
+-x     # Negiere x
++x     # Tut nichts
+x ** y # x hoch y
+abs(x) # Betrag von x
+int(x) # Erstellt int aus x
+float(x)        # Erstellt float aus x
+complex(re, im) # Erstellt complex aus re und im
+divmod(x, y)    # Das Paar (x // y, x % y)
+\end{lstlisting}
+Die Division von zwei Ganzzahlen wieder eine Ganzzahl in \PythonZwei und eine Gleitkommazahl in \PythonDrei.
+Sind die Typen der Operationen verschieden, verhält sich \Python ebenfalls wie \CC und nimmt immer den genaueren Typ.
+\begin{lstlisting}
+2   /  3   # = 0 in Python2; 0.6666666666666666 in Python3
+2   /  3.0 # = 0.6666666666666666
+2.0 /  3   # = 0.6666666666666666
+2.0 // 3.0 # = 0.0
+\end{lstlisting}
+
+Des Weiteren gibt es für \lpy{int}, \lpy{float} und \lpy{complex} typenspezifische Funktionen.
+Für \lpy{int} gibt es beispielsweise Bitoperationen \lstinline[style=PyInline]|~|, \lpy{|}, \lpy{&}, \lstinline[style=PyInline]|^|, \lpy{<<} und \lpy{>>};
+für \lpy{float} gibt es beispielsweise die Funktion \lpy{as_integer_ration}, die \lpy{x} als Bruch darstellt;
+und komplexe Zahlen können beispielsweise mit der Funktion \lpy{conjugate} ihr Komplexkonjugiertes zurückgeben.
+Mehr solcher Funktionen sind hier zu finden \cite[Library, Build-in Types, Numeric Types]{Python3}.
+
+Die Funktion \lpy{float(x)} erstellt aus \lpy{x} ein Objekt vom Typ \lpy{float}.
+Praktischerweise ist der Typ des Objekts \lpy{x} fast unbeschränkt.
+Hier ein Beispiel.
+\begin{lstlisting}
+float(700)           # Erzeugt das Objekt 700.0
+float('   -12345\n') # Erzeugt das Objekt -12345.0
+float('1e-003')      # Erzeugt das Objekt 0.001
+float('+1E6')        # Erzeugt das Objekt 1000000.0
+float('-Infinity')   # Erzeugt das Objekt -inf
+\end{lstlisting}
+An dieser Stelle sei noch gesagt, dass ein Objekt vom Typ \lpy{typ} genau dann als \lpy{float} (bzw.\ \lpy{int} oder \lpy{complex}) interpretiert werden,
+wenn die zu \lpy{typ} gehörige Klasse über die speziellen Memberfunktion \lpy{__float__} (bzw.\ \lpy{__int__} oder \lpy{__complex__}) verfügt.
+Was das genau heißt, wird im Abschnitt \ref{section:klassen} erklärt.

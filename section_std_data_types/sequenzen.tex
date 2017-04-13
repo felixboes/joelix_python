@@ -1,0 +1,289 @@
+\subsection{Sequenzen}
+\label{section:std_data_types:sequenzen}
+Sequenzen sind sogenannte ``Container'', die sich zum Teil ähnlich wie die aus \CC bekannten Arrays verhalten.
+Die wichtigsten Sequenztypen sind der mutable Typ \lpy{list}, sowie die immutable Typen \lpy{tuple} und \lpy{str}.
+
+
+\subsubsection{Gemeinsamkeiten}
+\label{section:std_data_types:sequenzen:gemeinsamkeiten}
+Besprechen wir zunächst die wichtigsten Operationen, die sich die drei Typen \lpy{list}, \lpy{tuple} und \lpy{str} teilen.
+\begin{lstlisting}
+a = [x,y,z] # a ist Typ list  mit a[0]=x, a[1]=y, a[2]=z
+a = (x,y,z) # a ist Typ tuple mit a[0]=x, a[1]=y, a[2]=z
+a = 'xyz'   # a ist Typ str   mit a[0]=x, a[1]=y, a[2]=z
+a[i]        # Die Variable a[i]
+len(a)      # Laenge von a
+\end{lstlisting}
+Für nicht-negative Ganzzahlen \lpy{i} ist völlig klar was damit gemeint ist.
+Allerdings sind auch negative Werte für \lpy{i} zulässig: hier benutzt \Python den Index \lpy{len(a) + i}.
+Insgesamt sind nur Werte \lpy{-len(a) <= i < len(a)} zulässig.
+
+Um zu überprüfen, ob (der Wert des Objekts der Variable) \lpy{x} mindestens einmal in \lpy{a} vorkommt oder nicht, gibt es die folgenden Operationen.
+\begin{lstlisting}
+x in a      # True  genau dann wenn x in a enthalten ist
+x not in a  # False genau dann wenn x in a enthalten ist
+\end{lstlisting}
+
+Um zwei Container desselben Typs (also \lpy{list}, \lpy{tuple} oder \lpy{str}) hintereinander zu heften gibt es folgende Operationen.
+Dabei entsteht immer ein neues Objekt.
+\begin{lstlisting}
+a + b # Erstelle die Verkettung von a und b (erst a dann b)
+n * a # a + a + ... + a (n mal)
+\end{lstlisting}
+Beispielsweise erstellt man eine Liste der Größe \lpy{n} mit Einträgen \lpy{0} wie folgt.
+\begin{lstlisting}
+thor = n*[0] # Die Sequenz [0, 0, ...., 0] der Laenge n
+\end{lstlisting}
+
+Einen Teilsequenz kann man wie folgt bekommen.
+\begin{lstlisting}
+b=a[i:j]   # b[t] = a[i+t]   mit i <= i+t   < j
+b=a[i:j:k] # b[t] = a[i+t*k] mit i <= i+t*k < j
+\end{lstlisting}
+Für nicht-negative \lpy{i} und \lpy{j} ist völlig klar was damit gemeint ist.
+Auch hier sind negative Werte für \lpy{i} und \lpy{j} zulässig solange \lpy{-len(a) <= i,j < len(a)} erfüllt ist.
+\begin{lstlisting}
+a[2:-4] # Die Variablen a[2], ..., a[n-4] fuer n = len(a)
+\end{lstlisting}
+Außerdem können \lpy{i} und \lpy{j} weggelassen werden.
+Dann ist \lpy{i = 0} bzw.\ \lpy{j = len(a)}.
+\begin{lstlisting}
+a[ :-4] # Die Variablen a[0], ..., a[n-4] fuer n = len(a)
+a[2:  ] # Die Variablen a[2], ..., a[n]   fuer n = len(a)
+\end{lstlisting}
+Bei diesen Teilsequenzen ist es wichtig zu wissen, dass hier sogenannte ``oberflächeliche Kopien'' erstellt werden.
+Was das ist und welche (ungeahnten) Konsequenzen das haben kann, behandeln wir im Abschnitt \ref{section:std_data_types:sequenzen:kopien}.
+
+Weitere nützliche Operationen sind die Folgenden.
+\begin{lstlisting}
+min(a)     # Kleinstes Element von a, falls sinnvolle Frage
+max(a)     # Groesstes Element von a, falls sinnvolle Frage
+a.count(x) # Anzahl der Variablen die gleich x sind.
+a.index(x) # Index von der ersten Variablen, die gleich x ist
+a.index(x, i)    # Index von der ersten Variablen, die gleich x ist sowie
+                 # gleich oder nach i kommt
+a.index(x, i, j) # Index von der ersten Variablen, die gleich x ist sowie
+                 # gleich oder nach i sowie vor j kommt
+\end{lstlisting}
+
+
+\subsubsection{Oberflächeliche und tiefe Kopien}
+\label{section:std_data_types:sequenzen:kopien}
+Eine Sequenz ist ein Objekt.
+Der Wert einer Sequenz ist eine linear geordnete Menge von Variablen.
+Ja richtig, der Wert einer Sequenz ist eine linear geordnete Menge von Variablen (und nicht von Objekten).
+Deshalb ist eine sogenannte ``oberflächliche Kopie'' einer Sequenz \lpy{a} ein neues Objekt \lpy{b} mit dem selben Wert wie \lpy{a}.
+Das heißt, \lpy{a[0]} und \lpy{b[0]} zeigen auf dasselbe Objekt.
+Schauen wir uns das folgende Beispiel an:
+\begin{lstlisting}
+# In diesem Beispiel bezeichnen wir Listen der Form [i,j] wobei i und j
+# Ganzzahlen sind als Vektoren.
+
+# Zuerst erstellen wir eine Liste von drei Vektoren und kopieren die Liste
+vekt_lst = [ [0,1], [2,3], [5,1] ] # Liste von drei Vektoren
+kopie    = vekt_lst[0:3]           # Oberflaechliche Kopie
+
+# Die Listen sind verschieden
+print(id(vekt_lst)) # 140541651867528
+print(id(kopie))    # 140541679766536
+
+# Die Elemente von einer der Listen zu aendern hat folgenden Effekt
+v = kopie[0] # zeigt auf denselben Vektor wie kopie[0] und vekt_lst[0]
+v[0] = 100   # v wird geaendert
+print(v)        # [100,1]
+print(kopie)    # [[100, 1], [2, 3], [5, 1]]
+print(vekt_lst) # [[100, 1], [2, 3], [5, 1]]
+\end{lstlisting}
+
+Dieses Verhalten ist in den meisten Fällen gewollt.
+Wenn man eine ``tiefe Kopie'' der Sequenz \lpy{a} braucht, also eine Sequenz \lpy{b},
+deren ``mutable'' Objekte denselben Wert, aber eine verschiedene Identität haben, dann benutzt man das Modul \lpy{copy}
+(siehe auch Abschnitt \ref{section:module:empfohlene_module:copy}).
+Das geschieht wie folgt.
+\begin{lstlisting}
+# In diesem Beispiel bezeichnen wir Listen der Form [i,j] wobei i und j
+# Ganzzahlen sind als Vektoren.
+
+import copy
+
+# Zuerst erstellen wir eine Liste von drei Vektoren und kopieren die Liste
+vekt_lst = [ [0,1], [2,3], [5,1] ] # Liste von drei Vektoren
+kopie    = copy.deepcopy(vekt_lst) # Tiefe Kopie
+
+# Die Listen sind verschieden
+print(id(vekt_lst)) # 140541651867528
+print(id(kopie))    # 140541679766536
+
+# Die Elemente von einer der Listen zu aendern hat folgenden Effekt
+v = kopie[0] # zeigt auf denselben Vektor wie kopie[0]
+v[0] = 100   # v wird geaendert
+print(v)        # [100,1]
+print(kopie)    # [[100, 1], [2, 3], [5, 1]]
+print(vekt_lst) # [[  0, 1], [2, 3], [5, 1]]
+\end{lstlisting}
+
+
+\subsubsection{tuple}
+\label{section:std_data_types:sequenzen:tuple}
+Der Containertyp \lpy{tuple} ist immutable. Das bedeutet, dass weder einzelne Einträge des Tupels verändert werden können, 
+noch kann die Länge des Tupels verändert werden. Das Tupel \lpy{(3, 'Harry Potter')} beispielsweise wird über den gesamten Verlauf des 
+Programs das Tupel \lpy{(3, 'Harry Potter')} bleiben und kann nicht zu z.B.\ \lpy{(1, 'LotR')} geändert werden. 
+
+Dennoch nutzt man Tupel implizit rechts häufig. Unter anderem können, wie im Crashkurs Abschnitt \ref{section:crashkurs:funktionen} bereits angedeutet, Funktionen 
+mehrere Objekte zurückgeben. Diese werden dann zusammen in ein Tupel gepackt, in der Reihenfolge, in der sie nach dem 
+\lpy{return}-Statement aufgezählt sind. Das folgende Beispiel veranschaulicht dies:
+
+\begin{lstlisting}
+def doppeltupelfkt(x,y)
+  return 2*x, 2*y
+
+z = doppeltupelfkt(1,2)
+print( z )              # gibt (2,4) aus
+\end{lstlisting}
+
+\lpy{z} ist nach Aufrufen der Funktion das Tupel \lpy{(2,4)}, d.h.\ wenn eine Funktion mehrere Objekte zurückgibt, werden sie in 
+einem Objekt abgefangen.
+
+Außerdem gibt es für Tupel noch die Möglichkeit der mehrfachen Zuordnung:
+
+\begin{lstlisting}
+x_1, x_2, ... , x_n = z # z ist Tupel mit len(z) = n
+\end{lstlisting}
+
+Hierbei wird \lpy{z[i-1]} der Variable \lpy{x_i} zugeordnet. Auf diese Weise können auch die Objekte, die eine Funktion 
+zurückgibt, in mehreren Variablen abgespeichert werden statt in nur einem Tupel. Dabei muss darauf geachtet werden, dass 
+auf der linken Seite der Zuordnung genau so viele Variablen stehen wie das Tupel Elemente hat.
+
+Ansonsten verfügt \lpy{tuple} über keine weiteren (für diesen Kurs bedeutsamen) Operationen --- abgesehen von den Gemeinsamkeiten mit 
+anderen Sequenzen, die im vorangegangenen Abschnitt \ref{section:std_data_types:sequenzen:gemeinsamkeiten} beschrieben wurden.
+
+
+\subsubsection{list}
+\label{section:std_data_types:sequenzen:listen}
+Den mutable Containertyp \lpy{list} verwendet man in \Python recht oft.
+Neben den Operationen, die alle Sequenzen gemeinsam haben, können wir eine gegebene Liste \lpy{a} mit den nachfolgenden Operationen verändern.
+
+Folgende Operationen fügen Objekte hinzu oder entfernen sie.
+\begin{lstlisting}
+a[i] = x       # Ersetze a[i] durch x
+a.insert(i, x) # Fuege x hinter a[i] ein
+a.append(x)    # Fuege x am Ende von a ein
+x = a.pop([i]) # Erhalte x = a[i] und entferne a[i] aus der list
+a.remove(x)    # Entferne die erste Variable mit Wert x
+\end{lstlisting}
+
+Folgende Operationen verlängern eine gegebene \lpy{list} mit Namen \lpy{a} um eine (andere) gegebene \lpy{list}.
+\begin{lstlisting}
+a += t # Verlaengert a mit t
+a *= n # Verlaengert a n mal mit sich selbst
+\end{lstlisting}
+Wir machen darauf aufmerksam, dass \lpy{a+=t} nicht dasselbe ist wie \lpy{a=a+t}.
+Der erste Ausdruck verlängert \lpy{a} um \lpy{t}, der zweite Ausdruck erstellt ein neues Objekt mit Wert \lpy{a+t} und danach referenziert \lpy{a} auf dieses Objekt.
+Schauen wir uns dazu folgendes Beispiel an.
+\begin{lstlisting}
+thor = ['Valhalla', 42] # Erstellt thor
+print(id(thor))         # 140541679765448
+thor += ['Valgrind']    # fuegt 'Valgrind' hinzu
+print(id(thor))         # 140541679765448
+thor = thor + ['Suppe'] # erstellt neue Liste und nennt sie thor
+print(id(thor))         # 140541679767112
+\end{lstlisting}
+
+Listen können auch scheibchenweise mit nur einer Operation verändert werden.
+\begin{lstlisting}
+a[i:j] = t   # Entferne den slice a[i:j] und fuege dort die Liste t ein
+del a[i:j]   # Entferne den slice a[i:j]. Aequivalent zu a[i:j] = []
+a[i:j:k] = t # Ersetze den slice a[i:j:k] durch die Elemente der Liste t
+del a[i:j:k] # Entferne den slice a[i:j:k]
+\end{lstlisting}
+
+Außerdem können wir eine Liste leeren oder eine oberflächliche Kopie anfertigen.
+Das funktioniert so:
+\begin{lstlisting}
+a.clear() # Entfernt alle Elemente von a
+a.copy()  # Erstellt eine oberflaechliche Kopie von a
+\end{lstlisting}
+Eine oberflächliche Kopie erstellt eine neue Liste mit denselben Variablen.
+Insbesondere sind die referenzierten Objekte der beiden Listen identisch.
+Das will man oft, da so eine oberflaechliche Kopie sehr schnell erstellt ist.
+Manchmal möchte man aber, dass die Objekte verschieden sind.
+Wie das funktioniert, wird im Abschnitt \ref{section:std_data_types:sequenzen:kopien} besprochen.
+
+Für Schleifendurchläufe (oder auch andere Situationen) kann es sinnvoll sein, eine Liste umzudrehen.
+Außerdem möchte man Listen sortieren können, sofern das Sinn macht.
+Dafür stehen diese beiden vielsagenden Funktionen bereit.
+\begin{lstlisting}
+a.reverse() # Kehrt a um
+a.sort()    # Sortiert a, falls das Sinn macht
+\end{lstlisting}
+Genauer gesagt kann man eine Liste sortieren, sofern je zwei Elemente \lpy{x} und \lpy{y} der Liste mit \lpy{x < y} verglichen werden können.
+Siehe hierzu auch \ref{section:klassen:spezielle_funktionen}.
+
+
+\subsubsection{range}
+\label{section:std_data_types:sequenzen:range}
+Ein sogenanntes ``Rangeobjekt'' ist eine immutable Sequenz von aufsteigenden ganzen Zahlen, die sich so ähnlich wie ein Tupel verhält.
+Es gibt drei einfache Möglichkeiten ein Rangeobjekt zu erstellen.
+Um ein Rangeobjekt der Zahlen \lpy{0 <= i < n} zu erstellen, ruft man die Funktion \lpy{range(n)} auf.
+Um ein Rangeobjekt der Zahlen \lpy{m <= i < n} zu erstellen, ruft man die Funktion \lpy{range(m,n)} auf.
+Um ein Rangeobjekt der Zahlen \lpy{m <= i*k < n} zu erstellen, ruft man die Funktion \lpy{range(m,n,k)} auf.
+\begin{lstlisting}
+range(n)     # (0, 1, ..., n-1)
+range(m,n)   # (m, m+1, ..., n-1
+range(m,n,k) # (m, m+k, ...., m+l*k) mit m+l*k < k <= m+(l+1)*k
+\end{lstlisting}
+Für \lpy{n}, \lpy{m} und \lpy{k} sind auch negative Werte möglich, solange dabei eine endliche Sequenz von Zahlen erstellt werden kann.
+
+
+\subsubsection{list comprehension}
+\label{section:std_data_types:sequenzen:list_comprehension}
+Die sogenannten \emph{list comprehension} ist eine sehr praktische Möglichkeit um aus bereits vorhandenen Sequenzen neue Listen zu erstellen.
+Hier ist \lpy{a} eine Sequenz und wir wollen all diejenigen \lpy{x} aus \lpy{a} haben, die eine gewisse Bedingung \lpy{cond(x)} erfüllen.
+\begin{lstlisting}
+[ x for x in a if cond(x) ]
+\end{lstlisting}
+Außerdem können wir statt \lpy{x} eine (von \lpy{x}) abhängende) Expression \lpy{expr(x)} in unsere neue Liste stecken.
+\begin{lstlisting}
+[ expr(x) for x in a if cond(x) ]
+\end{lstlisting}
+Noch allgemeiner, können wir eine Expression \lpy{expra(x)} verwenden, wenn die Bedingung \lpy{cond(x)} erfüllt ist und im anderen Fall eine Expression \lpy{exprb(x)} verwenden.
+\begin{lstlisting}
+[ expra(x) if cond(x) else exprb(x) for x in a  ]
+\end{lstlisting}
+
+Hier drei Beispiele.
+Wir wollen eine Liste aller natürlichen Zahlen $0 \le x < 9$, die nicht durch $4$ teilbar sind.
+\begin{lstlisting}
+[ x for x in range(10) if x % 4 != 0 ]
+\end{lstlisting}
+Wir bekommen ein Tupel \lpy{a} und wollen daraus eine Liste all seiner Strings erstellen.
+\begin{lstlisting}
+a = ('ss', 20 , 'rtt3', 50, 40.2, [344], ('akk', 'er') )
+[ x for x in a if type(x) is str ]
+\end{lstlisting}
+Wir bekommen ein Tupel \lpy{a} der nur Strings enthält.
+Wir wollen eine Liste, die alle Strings aus \lpy{a} enthält, außer der String ist \lpy{'Anakonda'}, den wollen wir durch \lpy{'Python'} ersetzen.
+\begin{lstlisting}
+a = ( 'blau', 'anakonda', 'Strasse', 'Anakonda', '42', 'Anakonda' )
+[ x if x is not 'Anakonda' else 'Python' for x in a ]
+\end{lstlisting}
+
+
+\subsubsection{str}
+\label{section:std_data_types:sequenzen:str}
+Die immutable Sequenz \lpy{str} verfügt über sehr viele selbsterklärende Funktionen.
+Zum Beispiel erstellt man aus einem String \lpy{s} mit \lpy{s.lower()} einen String, der nur aus Kleinbuchstaben besteht. 
+Wir besprechen nun noch kurz die Funktion \lpy{format} und verweisen den interessierten Leser auf \cite[Library, Build-in Types, Text Sequence Type]{Python3}.
+
+Oft macht es Sinn, einen String durch Einsetzung von Variablen zu erzeugen.
+Dabei sollen die Variablen von der Beschreibung des zu entstehenden Strings getrennt sein.
+Dieses Konzept sollte von der \C-Funktion \lcpp{printf} bekannt sein.
+In \Python kann man das am einfachsten mit der Funktionen \lpy{s.format(...)} erreichen.
+Dabei beschreibt \lpy{s} das Aussehen des Strings, also normalen Text sowie Platzhalter \lstinline[style=PyInline]|'{}'| und
+die Parameter von \lpy{format} sind die Variablen, die in die Platzhalter eingesetzt werden.
+Hier ein Beispiel:
+\begin{lstlisting}
+text = 'Hallo {}. Ich bin {} Jahre alt.'.format('Welt', 42)
+print(text) # Hallo Welt. Ich bin 42 Jahre alt.
+\end{lstlisting}
+

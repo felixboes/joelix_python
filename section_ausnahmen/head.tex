@@ -1,0 +1,37 @@
+\section{Ausnahmen}
+\label{section:ausnahmen}
+Gut geschriebene Bibliotheken und Programme stürzen nicht ab, wenn sie falsch bedient werden oder
+wenn eine andere außergewöhnliche Situation eintritt.
+Beispielsweise soll unsere \lcpp{joelixblas} Bibliothek nicht abstürzen, wenn der Benutzer eine Funktion mit unzulässigen Werten aufruft oder
+wenn der Benutzer mehr Speicher verlangt, als das System uns bieten kann.
+
+In \Python trennt man den ``gewöhnlichen Programmfluss'' und die ``außergewöhnlichen Programmfluss'' wie folgt:
+Wenn der normale, sequenzielle Programmfluss durch ein außergewöhnliches Vorkommnis unterbrochen werden muss, nennt man das eine \emph{Ausnahme} oder \emph{Exception}.
+Sobald eine Ausnahme \emph{ausgelöst} wird, muss sie \emph{behandelt} werden.
+
+Typische Ausnahmen sind Fehler wie Syntaxfehler, Zugriffsfehler oder unzureichend viel Speicher.
+Es gibt in \Python auch Ausnahmen, die nicht durch Fehler ausgelöst werden.
+Außerdem kann man eigene Ausnahmen definieren.
+
+Wird eine Ausnahme nicht behandelt, bricht der Programmfluss der gerade laufenden Funktion ab und die Ausnahme wird an die aufrufende Funktion weitergegeben.
+Die Ausnahme wird dann entweder dort behandelt, oder das Weiterreichen wird fortgesetzt bis die Ausnahme entweder irgendwann behandelt wird oder das Programm mit der besagten Ausnahme abbricht.
+
+Die folgende Ausnahme hat man bestimmt schon einige Male gesehen, wenn man Code direkt im \Python-Interpreter schreibt:
+\begin{lstlisting}
+a,b = 2,5
+if a == b
+  print( "A ist ja wirklich B")
+
+# Der Code liefert:
+#   File "...", line ...
+#     if a == b
+#            ^
+# SyntaxError: invalid syntax
+\end{lstlisting}
+Hier wird die zweite Zeile vom \Python-Interpreter gelesen.
+Dieser stellt einen Syntaxfehler fest und löst eine Ausnahme aus, die den Programmfluss an dieser Stelle unterbricht.
+Schlussendlich wird das Programm beendet.
+
+\input{section_ausnahmen/ausnahmen_behandeln}
+\input{section_ausnahmen/ausnahmen_ausloesen}
+\input{section_ausnahmen/definierte_und_eigene_ausnahmen}

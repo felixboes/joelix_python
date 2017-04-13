@@ -1,0 +1,110 @@
+\subsection{Ausnahmen behandeln}
+\label{section:ausnahmen:ausnahmen_behandeln}
+Bevor wir erklären, wie eine Ausnahme behandelt wird, gehen wir kurz darauf ein, was eine Ausnahme ist:
+Eine Ausnahme ist ein Objekt und somit hat sie einen festen Typ.
+Der \Python-Standard definiert eine Hand voll Ausnahmetypen, wie zum Beispiel
+den Ausnahmetyp \lpy{ZeroDivisionError} (der bei einer Division durch Null ausgelöst wird) oder
+den Ausnahmetyp \lpy{SyntaxError} (den der \Python-Interpreter bei einem Syntaxfehler auslöst).
+Der Wert einer Ausnahme \lpy{ausnahme} vom Ausnahmetyp \lpy{Ausnahmetyp} ist (für uns und nur hier) ein String und jede Ausnahme kann als String interpretiert werden.
+Eine Liste der wichtigsten, bereits definierten Ausnahmetypen sind in Abschnitt \ref{section:ausnahmen:definierte_und_eigene_ausnahmen} zu finden.
+
+Ein Programmabschnitt in dem Ausnahmen ausgelöst werden können, die wir (im Fall das Fälle) behandeln wollen,
+wird der Programmabschnitt in ein \lpy{try-except} Konstrukt eingefasst.
+Nach \lpy{try:} folgt unser (eingerückter) Programmabschnitt.
+Dann werden die möglichen Ausnahmen behandelt.
+Möchte oder muss man eine Ausnahme vom Ausnahmetyp \lpy{Ausnahmetyp} behandeln, geschieht das mit \lpy{except Ausnahmetyp:} gefolgt von der auszuführenden Ausnahmebehandlung.
+Hier kann man auch mehrere Ausnahmentypen zusammenfassen mit \lpy{except (Ausnahmetyp_1, Ausnahmetyp_2, ...):}.
+Alle anderen Ausnahmentypen sammelt man mit \lpy{except:}.
+Das sieht dann zum Beispiel so aus:
+\begin{lstlisting}
+# Programmfluss
+
+try:
+  # Abschnitt der Ausnahmen ausloesen kann, die wir behandeln wollen
+except Ausnahmetyp_1:
+  # Ausnahmetyp 1 behandeln
+except (Ausnahmetyp_2, Ausnahmetyp_3):
+  # Ausnahmetyp 2 behandeln
+# Hier noch mehr Ausnahmentypen die man behandeln moechte
+except:
+  # Alle anderen Ausnahmen behandeln
+
+# Hier geht der normale Programmfluss weiter
+\end{lstlisting}
+
+Um auf eine Ausnahme von einem Ausnahmetyp zugreifen zu können nutzt man \lpy{except Ausnahmetyp as ausnahme}.
+Hier ein Beispiel, das die Ausnahme ``Division durch Null'' behandelt.
+\begin{lstlisting}
+try:
+  a = 1/0
+except ZeroDivisionError as ausnahme:
+  print('Ausnahme:', ausnahme)
+\end{lstlisting}
+Man kann auch mehrere Ausnahmetypen mit \lpy{as} benennen.
+\begin{lstlisting}
+try:
+  a = 1/0
+except (ZeroDivisionError, ValueError) as ausnahme:
+  print('Ausnahme vom Typ:', type(ausnahme), 'mit Wert:', ausnahme )
+\end{lstlisting}
+
+Es gibt Situationen, da möchte man einen Programmabschnitt ausführen der Ausnahmen auslösen kann und diese dann folgendermaßen behandeln.
+Wird eine (behandelnare) Ausnahme ausgelöst, so soll sie behandelt werden.
+Wird jedoch keine Ausnahme ausgelöst, dann (und nur dann) soll ein weiterer Programmabschnitt ausgeführt werden.
+Das funktioniert mit der \lpy{try-except-else} Konstruktion:
+\begin{lstlisting}
+# Programmfluss
+
+try:
+  # Abschnitt A
+except ...: # Zu behandelnden Ausnahmetyp festlegen
+  # Ausnahmen behandeln
+... # Weitere Ausnahmebehandlungen
+else: # Wird ausgefuehrt genau dann wenn Absch. A keine Ausnahme ausloest
+  # Abschnitt B
+
+# Hier geht der normale Programmfluss weiter
+\end{lstlisting}
+Der obige Code verhält sich genau wie der nachfolgende Code:
+\begin{lstlisting}
+try:
+  ausnahme_aufgetreten = False
+  # Abschnitt A
+except ...: # Zu behandelnden Ausnahmetyp festlegen
+  ausnahme_aufgetreten = True
+  # Ausnahmen behandeln
+... # Weitere Ausnahmebehandlungen, die ausnahme_aufgetreten=True setzen
+if ausnahme_aufgetreten == False:
+  # Abschnitt B
+\end{lstlisting}
+
+An dieser Stelle kann man bereits verstehen, warum Ausnahmen ein gutes Konzept sind.
+Durch die Aufteilung in einen von \lpy{try} eingeleiteten Block schreibt man den auszuführenden Programmcode und
+teilt die Ausnahmebehandlung in die von \lpy{except} eingeleiteten Blöcken ein.
+Das führt zu wesentlich übersichtlicherem Code.
+
+Hier noch ein Beispiel:
+\begin{lstlisting}[escapechar=|]
+import math
+def ganzzahlige_wurzel( x ):
+  """Diese Funktion zieht die ganzzahlige Wurzel."""
+  y = 0 # Wir definieren eine Variable y, die wir am Ende zurueckgeben,
+        # unabhaengig davon, ob eine Ausnahme behandelt werden muss oder
+        # nicht
+  try:  # Versuche die ganzzahlige Wurzel zu siehen
+    y = int(math.sqrt(x)) |\label{zeile:sqrt_loest_fehler_aus}|
+  except TypeError as ausnahme:  # Ausnahme: x hat den falschen Typ
+    print('Falscher Typ:', ausnahme)
+  except ValueError as ausnahme: # Ausnahme: x ist negativ.
+    print('Falscher Wert:', ausnahme)
+  except:                        # Ausnahme: andere Ausnahme
+    print('Anderer, komischer Fehler...')
+  return y |\label{zeile:y_ist_evtl_nicht_definiert}|
+
+ganzzahlige_wurzel('Suppe') # Druckt: 'Falscher Typ: a float is required'
+ganzzahlige_wurzel(-3)      # Druckt: 'Falscher Wert: math domain error'
+ganzzahlige_wurzel(6)       # Druckt nix.
+\end{lstlisting}
+Man beachte, dass die Zeile \lpy{y=0} nicht vergessen werden darf, denn sonst kann es passieren, dass \lpy{y} in Zeile~\ref{zeile:y_ist_evtl_nicht_definiert} nicht definiert ist.
+Falls \lpy{math.sqrt(x)} eine Ausnahme auslöst, wird der Programmfluss in Zeile~\ref{zeile:sqrt_loest_fehler_aus} unterbrochen und die Ausnahme behandelt.
+Dass heißt, beim Auslösen einer Ausnahme wird \lpy{y} in dieser Zeile weder definiert noch auf ein Objekt gesetzt und kann insbesondere in Zeile~\ref{zeile:y_ist_evtl_nicht_definiert} nicht zurückgegeben werden.

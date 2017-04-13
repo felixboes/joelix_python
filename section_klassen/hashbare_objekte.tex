@@ -1,0 +1,54 @@
+\subsection{Hashbare Objekte}
+\label{section:klassen:hashbare_objekte}
+Wir erklären hier, was hashbare Objekte sind und wie man selbstdefinierte Klassen hashbar macht.
+
+Hashfunktionen und Hashtables wurden im Fortgeschrittenen Programmierkurs (siehe \cite{joelixC}) bereits erklärt, deshalb halten wir uns hier kurz.
+Für einen festgelegten Typ \lpy{T} nennen wir Menge aller Objekte diesen Typs $Set_T$.
+Die Menge der \Python-Ganzzahlen nennen wir hier $Int$.
+Man sagt dass
+\[
+  hash \colon Set_T \to Int
+\]
+eine ``zulässige Hashfunktion'' ist, wenn für je zwei Objekte \lpy{x} und \lpy{y} aus $Set_T$ für die \lpy{x == y} als \lpy{True} auswertet auch \lpy{hash(x) == hash(y)} als \lpy{True} auswertet.
+Desweiteren muss bei mutable Objekten gewähleistet sein, dass beim Ändern des Werts eines jeden Objekts \lpy{x} die Ausdücke \lpy{x == y} und \lpy{hash(x) == hash(y)} unabhängig von der Änderung sind.
+Man sagt, dass ein Objekt oder ein Typ \lpy{T} ``hashbar'' ist, wenn eine zulässige Hashfunktion für $Set_T$ definiert ist.
+Der \Python-Standard hält für die dort definierten immutable Typen (also Objekte vom Typ \lpy{int}, \lpy{float}, \lpy{complex}, \lpy{tuple}, \lpy{str}, \lpy{bool} und \lpy{none},
+aber nicht \lpy{list} und \lpy{dict}) zulässige Hashfunktionen bereit.
+Demnach sind diese Typen hashbar.
+
+Um eine selbstgeschriebene Klasse \lpy{K} hashbar zu machen, müssen wir die beiden spezielle Funktion \lpy{__eq__} und \lpy{__hash__} implementieren.
+Dabei muss (wir oben gefordert) für je zwei Instanzen \lpy{x} und \lpy{y} von \lpy{K} für die \lpy{x == y} als \lpy{True} auswertet, der Wert von \lpy{x.__hash__()} und \lpy{y.__hash__()} übereinstimmen.
+Außerdem verlangen wir, dass, falls das Objekt (durch Memberfunktionen) verändert werden kann, so soll \lpy{__eq__} und \lpy{__hash__} unabhängig von dieser Änderung sein.
+
+Hier ein ganz simples Beispiel.
+Wir beschreiben eine Klasse mit dem Namen \lpy{Geldboerse}, inder man 1-Euro Münzen und 1-Cent Münzen speichern kann.
+Die Anzahl der Münzen soll nach dem Erstellen nicht mehr geändert werden.
+Zwei Geldbörsen sind genau dann gleich, wenn sie dieselbe Anzahl von 1-Euro und 1-Cent Münzen enthalten.
+Als Hashfunktion nehmen wir die Anzahl der 1-Euro Münzen modulo 100.
+Wir bemerken, dass das eine zulässige Hashfunktion ist.
+Der Code sieht dann so aus:
+\begin{lstlisting}
+class Geldboerse:
+  """Eine sehr naive Klasse die eine Geldboerse darstellt."""
+  def __init__(self, euro, cent):
+    self._euro = euro
+    self._cent = cent
+  
+  def __str__(self): # Macht Geldboerse als String interpretierbar
+    return 'Euro: {}, Cent: {}'.format(self._euro, self._cent)
+  
+  def __eq__(self, other): # Implementiert x == y
+    if self._euro == other._euro and self._cent == other._cent:
+      return True
+    else:
+      return False
+  
+  def __hash__(self): # Eine sehr naive Hashfunktion
+    return self._euro % 100
+\end{lstlisting}
+
+Wenn wir nun doch zulassen, dass man die Anzahl der Münzen geändert werden kann,
+so wäre unsere oben angegebene Hashfunktion nicht mehr zulässig.
+Es ist also gar nicht so leicht, eine zulässige Hashfunktion für beliebige Klassen zu schreiben und in der Tat,
+man will meistens nur solche Objekte hashbar machen, die sich nach dem Erstellen nur unwesentlich oder garnicht mehr verändern.
+

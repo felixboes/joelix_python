@@ -1,0 +1,31 @@
+\section{Klassen}
+\label{section:klassen}
+
+Man benutzt Klassen, um Code übersichtlicher zu gestalten.
+Immer wenn wir einen (mathematischen oder realen) Gegenstand modelieren wollen, dessen Zustand
+\begin{enumerate}[label=\textbf{(K\arabic*})]
+  \item \label{klassenmerkmal_zustand_beschr} durch ein Verzeichniss von Eigenschaften beschrieben wird und
+  \item \label{klassenmerkmal_zustand_aenderung} der Zustand durch eine oder mehrere feste Regeln verändert wird
+\end{enumerate}
+benutzen wir dazu sogenannte Klassen.
+
+Bevor wir besprechen wie man Klassen in \Python definiert und nutzt, schauen wir uns ein Beispiel für eine Klasse an.
+Der Zustand einer Matrix $M$ wird durch ihre Größe und ihre Koeffizienten bestimmt.
+Damit erfüllen Matrizen das erste Kriterium \ref{klassenmerkmal_zustand_beschr}.
+Es macht Sinn die Einträge einer Matrix abzufragen, die Einträge zu ändern und Matrizen zu addieren oder zu multiplizieren (sofern sie die richtigen Größen haben).
+Damit erfüllen Matrizen das zweite Kriterium \ref{klassenmerkmal_zustand_aenderung}.
+Wie man eine Matrix modelliert hängt von \ref{klassenmerkmal_zustand_beschr} und \ref{klassenmerkmal_zustand_aenderung} ab.
+Allerdings legen \ref{klassenmerkmal_zustand_beschr} und \ref{klassenmerkmal_zustand_aenderung} nicht völlig fest, wie die Modellierung aussehen muss.
+Zum Beispiel können Matrizen durch zwei natürliche Zahlen (welche die Anzahl der Zeilen und Spalten festlegt) sowie die Liste der Einträge beschrieben werden,
+man kann aber auch das ``Compressed Sparse Row Storage'' Format verwenden.
+Für die reine Benutzung von Matrizen spielt diese Designentscheidung keine Rolle.
+
+An dieser Stelle machen wir noch darauf aufmerksam, wie man Klassen konzeptionell in \C umsetzen würde.
+Da man aus \C an \lcpp{struct} gewöhnt ist, kann man eine Klasse durch ein \lcpp{struct K} zusammen mit einer Menge von Funktionen realisieren, deren erstes Argument vom Typ \lcpp{struct K*} ist.
+Genau so haben wir Vektoren und Matrizen in der Bibliothek \lcpp{JoelixBlas} realisiert (siehe \cite{joelixC}).
+
+\input{section_klassen/klassen_definieren_und_nutzen}
+\input{section_klassen/eine_sehr_naive_matrixklasse}
+\input{section_klassen/spezielle_funktionen}
+\input{section_klassen/eine_naive_matrixklasse}
+\input{section_klassen/hashbare_objekte}

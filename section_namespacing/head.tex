@@ -1,0 +1,31 @@
+\section{Einschub: Namespacing}
+\label{section:namespacing}
+Wie wir bereits wissen, organisieren wir unseren \Python-Code in Codeblöcken.
+Immer wenn wir eine neues \Python-Skript beginnt, zählen wir das als eigenen Block;
+Immer wenn wir Code einrücken ist dieser Code ein eigener Block.
+
+In so gut wie allen Blöcken definieren wir viele Variablen, zum Beispiel Klassennamen, Objekte und Funktionen.
+Es ist unvermeidbar, dass wir Variabelnamen mehrfach vergeben.
+Zum Beispiel haben viele Module eine Funktion mit dem Namen \lpy{main}, die nur dann aufgerufen wird,
+wenn das Modul das main-Modul ist (vergleiche Abschnitte \ref{section:funktionen:wo_ist_die_main_funktion} und \ref{section:module}).
+Bei der Organisation der Variablnamen stellt sich \Python klüger (wenn auch nicht notwendigerweise effizienter) als andere Sprachen an.
+In \Python werden Variablen zuerst lokal gesucht und gesetzt und erst dann global.
+Insbesondere haben wir nicht ganz viele globale Variablen, die alle \lpy{main} heißen.
+
+Genauer legt \Python die Struktur eines gerichteten Baums an.
+Dabei wird jeder Modul- Klassen und Funtktionsblock als Knoten verstanden und es verläuft genau dann einen gerichteten Weg von \lpy{A} nach \lpy{B},
+wenn der Codeblock \lpy{B} ein Unterblock vom Codeblock \lpy{A} ist.
+
+Wird eine Variable in einem Codeblock \lpy{A} definiert, so liegt sie am entsprechenden Knoten im Baum.
+Wir nennen die Variable ``lokal bezüglich \lpy{A}''.
+Wenn wir zum Beispiel in einem Modul \lpy{modul} zwei Funktionen \lpy{f} und \lpy{g} definieren,
+so sind \lpy{f} und \lpy{g} lokal bezüglich \lpy{modul}, aber weder \lpy{f} ist lokal bezüglich \lpy{g} noch anders herum.
+
+Wenn eine Variable \lpy{x} im Codeblock \lpy{A} ausgeweret werden soll, sucht \Python den Namen \lpy{x} erstmal im Codeblock \lpy{A}.
+Die Variable \lpy{x} kann in \lpy{A} definiert sein, muss sie aber nicht.
+Zum Beispiel wollen wir die Möglichkeit haben, Funktionen aufzurufen, die nicht in \lpy{A} definiert sind.
+Wurde die Variable gefunden, so nennen wir die Variable ``lokal bezüglich \lpy{A}''.
+Wenn sie nicht in \lpy{A} gefunden wurde, durchsucht \Python den genannten Baum skuzessive aufwärts.
+Wurde die Variable nicht in \lpy{A}, aber in einem Knoten über \lpy{A} gefunden, so nennen wir die Variable ``global bezüglich \lpy{A}''.
+
+Falls die Variable nicht gefunden werden kann, wird eine Ausnahme ausgelöst (vergleiche Abschnitt \ref{section:ausnahmen}).

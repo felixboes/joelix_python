@@ -1,0 +1,91 @@
+\section{Das Python Datenmodell}
+\label{section:datamodel}
+Ein wesentlicher Unterschied zwischen \CC und \Python ist das Verhalten von Daten im Speicher und den Zugriff darauf.
+Um den Unterschied zu \CC klarer zu machen, beginnen wir mit einer kurzen Wiederholung
+
+
+\subsection{Wiederholung: Daten in C und C++}
+\label{section:datamodel:cc}
+In \CC gibt es Variablen.
+Diese bestehen aus einer ``Speicheradresse'', einem ``Typ'' und dem dort gespeicherten ``Wert''.
+Sie verhalten sich also wie ein zusammenhängendes Stück Speicher, indem ein Wert gespeichert wird und wir wissen, wie wir diesen Wert zu interpretieren haben.
+Nehmen wir beispielsweise folgende Codezeile.
+\begin{lstlisting}[style=CPP]
+int32_t a = 0;
+int32_t b = 3;
+a = b;
+\end{lstlisting}
+In der ersten Zeile erstellen wir eine Variable vom Typ \lcpp{int32_t}, d.h.\ wir haben nun ein zusammenhängendes Stück Speicher indem der Wert einer ganzen 32-bit-Zahl gespeichert werden kann,
+und legen dort den Wert der Expression \lcpp{0} ab.
+In der zweiten Zeile erstellen wir eine weitere Variable vom Typ \lcpp{int32_t} und legen dort den Wert der Expression \lcpp{3} ab.
+In der dritten Zeile legen wir den Wert der Expression \lcpp{b} in den zu \lcpp{a} gehörigen Speicher ab.
+Nun ist der in \lcpp{a} gespeicherte Wert \lcpp{3} und der in \lcpp{b} gespeicherte Wert ebenfalls \lcpp{3}.
+Wenn \lcpp{b} stattdessen vom Typ \lcpp{double *} wäre, führte Zeile 3 zu einem Compilerfehler.
+
+
+\subsection{Daten in Python}
+\label{section:datamodel:python}
+Das \Python Datenmodell ist intelektuell nicht so einfach zu fassen wir das Datenmodell von \CC.
+Es ist zwar keine Magie, dennoch kann es einige Tage oder gar Wochen dauern kann, bis man sich daran gewöhnt hat.
+
+In \Python gibt es ``Objekte'' und ``Variablen''.
+Objekte repräsentieren Daten und Variablen referenzieren auf Objekte.
+Zunächst besprechen wir Objekte genauer und kümmer uns im Anschluss um Variablen.
+
+
+\subsubsection{Objekte}
+\label{section:datamodel:python:objekte}
+Objekte bestehen aus einer ``Identität'', einem ``Typ'' und einem ``Wert''.
+Sie verhalten sich wie ein zusammenhängendes Stück Speicher, in dem ein Wert gespeichert wird,
+also ganz genauso wie sich Variablen in \CC verhalten.
+Die Identität eines (existierenden) Objekts ändert sich nie und bestimmt ein Objekt (während der Laufzeit) eindeutig.
+Wenn man mag, kann man sich die Identität wie die Speicheradresse des Objekts vorstellen (auch wenn man in \Python keine Pointer verwendet).
+
+Ein jedes Objekt ist entweder ``mutable'' und kann nach seiner Erzeugung verändert werden oder es ist ``immutable'' und ist nach seiner Erzeugung konstant.
+Dieses Konzept gibt es ebenfalls in \CC:
+Alle Typen in \CC sind ohne weiteres ``mutable'', es sei denn, sie bekommen das Präfix \lcpp{const} bei ihrer Definition, denn dann sind sie ``immutable''.
+
+In \Python sind folgende Objekte immutable:
+die ganze Zahl \lpy{3} (siehe Abschnitt \ref{section:std_data_types:zahlen}),
+das Tupel \lpy{(1, 'a')} (siehe Abschnitt \ref{section:std_data_types:sequenzen}) und
+der leere Typ \lpy{None} (siehe Abschnitt \ref{section:std_data_types:none}).
+Die folgenden Objekte sind mutable:
+Die Liste \lpy{[1, 'a']} (siehe Abschnitt \ref{section:std_data_types:sequenzen}),
+das Verzeichnis \lstinline[style=Pyinline]|{ 'Felix' : 405, 'Jonathan' : 599  }| (siehe Abschnitt \ref{section:std_data_types:verzeichnisse})
+und die meisten Klassen (siehe Abschnitt \ref{section:klassen}).
+
+
+\subsubsection{Variablen}
+\label{section:datamodel:python:variablen}
+In \Python haben Variablen keinen Typ.
+Wir wiederholen nochmal: In \Python haben Variablen keinen Typ.
+Und ja, in der Tat, wir wiederholen nochmal: In \Python haben Variablen keinen Typ.
+Variablen referenzieren auf Objekte; sie sind sozusagen die (temporären) Namen von Objekten.
+Wenn man mag, kann man sich Variablen wie \lcpp{(void)}-Pointer vorstellen (auch wenn man in \Python keine Pointer verwendet).
+
+Variablen beziehen sich immer auf ein Objekt.
+Beim Erstellen einer Variable muss ihr konsequenterweise direkt ein Objekt zugewiesen werden.
+Betrachten wir ein einfaches Beispiel.
+\begin{lstlisting}
+a = 'Hallo' # Erstelle a; a referenziert das Objekt 'Hallo'.
+b = 'Welt'  # Erstelle b; b referenziert das Objekt 'Welt'.
+a = b       # a bezieht sich nun auf das Objekt "Welt".
+b = 3.141   # b bezieht sich nun auf das Objekt 3.141
+\end{lstlisting}
+In der ersten Zeile erstellen wir eine Variable \lpy{a}, die sich auf das Objekt \lpy{'Hallo'} bezieht.
+Das Objekt \lpy{'Hallo'} hat beispielsweise die Identität \lpy{1000}.
+In der zweiten Zeile erstellen wir eine Variable \lpy{b} die sich auf das Objekt \lpy{'Welt'} bezieht.
+Das Objekt \lpy{'Welt'} hat beispielsweise die Identität \lpy{2000}.
+In der dritten Zeile weisen wir \lpy{a} die Referenz auf das Objekt zu, auf das sich \lpy{b} bezieht.
+In der vierten Zeile weisen wir \lpy{b} die Referenz auf das Objekt \lpy{3.141} zu.
+Das Objekt \lpy{3.141} hat beispielsweise die Identität \lpy{3000}.
+Danach bezieht sich \lpy{a} auf \lpy{'Welt'} und \lpy{b} auf \lpy{3.141}.
+
+\subsection{Speichermanagement}
+Die meisten Objekte können genau solange verwendet werden, wie es Variablen gibt, die auf sie referenzieren.
+(Einige Ausnahmen sind beispielsweise Zahlen und das Objekt \lpy{None}.)
+Objekte, die nicht mehr verwendet werden können, werden automatisch dem ``Garbage Collector'' übergeben.
+Dieser entfernt die Objekte nach eigenem Bedarf aus dem Speicher.
+Das ist in den meisten Fällen bequemer als in \CC, wo man seinen Speicher selbst verwalten muss.
+In der Zeit wo der \CC Programmierer seinen Speicher aufräumt, trinken wir lieber GLUMP%
+\footnote{GLUMP Alkoholcola vereint das erweckende Prickeln von koffeinhaltiger Cola mit der betäubenden Wirkung von Alkohol.}.

@@ -1,0 +1,52 @@
+\subsection{Klassen definieren und nutzen}
+\label{section:klassen:klassen_definieren_und_nutzen}
+Eine Klasse definiert man \Python wie folgt:
+\begin{lstlisting}
+class klassenname:
+  def __init__(self, weitere_parameter):
+    self.membervariable_1 = ...
+    self.membervariable_2 = ...
+    ...
+  
+  def memberfunktion_1(self, weitere_parameter):
+    ...
+  
+  def memberfunktion_2(self, weitere_parameter):
+    ...
+  
+  ...
+  
+  def __spezielle_funktion_1__(self, weitere_parameter):
+    ...
+  
+  ...
+\end{lstlisting}
+Der Klassenname kann so wie alle Variablenamen fast frei gewählt werden.
+Variablen die zur Klasse gehören heißen ``Membervariablen''.
+Mit dem Präfix \lpy{self.} greift man auf sie {\bfseries innerhalb der Klasse} zu (aber nicht von außen).
+Funktionen die zur Klasse gehören heißen ``Memberfunktionen''.
+Ihr erstes Argument muss bei ihrer {\bfseries Definition innerhalb der Klasse} \lpy{self} sein, beim Zugriff wird der erste Prameter \lpy{self} nicht angegeben.
+
+Es gibt zwei Sorten von Memberfunktionen:
+sogenannte ``spezielle Funktionen'' die mit \lpy{__} beginnen und enden und
+``normale Funktionen'', die nicht mit \lpy{__} beginnen und enden.
+Mehr zu spezielle Funktionen besprechen wir in Abschnitt \ref{section:klassen:spezielle_funktionen}
+
+Die prominenteste spezielle Funktion ist der sogenannte ``Konstruktor'' oder ``Initialisierungsfunktion'' mit dem Namen \lpy{__init__}.
+Sie wird beim Erstellen eines Objekts automatisch aufgerufen.
+Außerdem kann man beim Erstellen eines Objekts gewisse Parameter übergeben.
+Bei unserem Matrixbeispiel würde es Sinn machen, die Zeilen- und Spaltengröße zu übergeben.
+In der Initialisierungsfunktion sollen alle Membervariablen definiert und (in Abhängigkeit von den übergebenen Parametern) in einen sinnvollen Ausganszustand gebracht werden.
+Man darf in der Initialisierungsfunktion auch andere Memberfunktionen aufrufen.
+Hat der Konstruktor der Klasse \lpy{klassenname} die Parameter \lpy{p_1, ..., p_k},
+so erstellt man ein Objekt vom Typ \lpy{klassenname} zu den Werten \lpy{par_1, ..., par_k} wie folgt.
+\begin{lstlisting}
+# Erstellt ein Objekt vom Typ klassenname bzgl. par_1, ..., par_k.
+# Die Variable var referenziert auf dieses Objekt.
+var = klassenname(par_1, ..., par_k)
+\end{lstlisting}
+Man sagt ``das Objekt \lpy{obj} ist eine Instanz der Klasse \lpy{klassenname}'' wenn der Typ des Objekts \lpy{obj} die Klasse \lpy{klassenname} ist.
+
+Zeigt eine Variable \lpy{var} auf ein Instanz von \lpy{klassenname}, so kann man auf die Membervariablen und Memberfunktionen der Instanz mithilfe des Präfixes \lpy{var.} zugreifen.
+Zeigt beispielsweise die Variable \lpy{var} auf ein Objekt dass eine Memberfunktion mit Namen \lpy{python_ist_cool},
+dann greifen wir auf diese Memberfunktion mit \lpy{var.python_ist_cool()} zu.

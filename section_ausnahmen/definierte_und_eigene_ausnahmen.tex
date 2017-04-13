@@ -1,0 +1,88 @@
+\subsection{Bereits definierte und eigens definierte Ausnahmen}
+\label{section:ausnahmen:definierte_und_eigene_ausnahmen}
+
+Wir listen nachfolgend einige Ausnahmentypen auf.
+Diese Liste ist nicht vollständig und wir verweisen den interessierten Leser auf \cite[Library: Exceptions]{Python3}.
+Außerdem sind einige der Ausnahmen voneinander abgeleitet.
+Da wir in diesem Kurs ``abgeleitete Klassen'' nicht behandelt haben, gehen wir hier weiter nicht darauf ein und verweisen nocheinmal auf \cite[Library: Exceptions]{Python3}.
+\begin{lstlisting}
+Exception          # Allgemeine Ausnahme.
+
+FloatingPointError # Gleitkommafehler
+OverflowError      # Overflowfehler
+ZeroDivisionError  # Du hast durch Null geteilt
+ImportError        # Fehler beim Importieren
+IndexError         # Falscher Index beim Sequenzzugriff
+KeyError           # Falscher Key beim Verzeichniszugriff
+MemoryError        # Wir haben nicht genug Speicher
+FileExistsError    # Datei existiert (beim erstellen einer neuen Datei)
+FileNotFoundError  # Datei nicht gefunden (beim oeffnen einer Datei)
+IsADirectoryError  # Dateioperation auf Ordner angewendet
+NotADirectoryError # Ordneroperation auf Datei angewendet
+PermissionError    # Unzureichende Zugriffsrechte (bei Dateien / Ordnern)
+RuntimeError       # Laufzeitfehler (wird vom Programmierer ausgeloest)
+NotImplementedError # Funktion ist nicht implementiert
+SyntaxError        # Syntaxfehler
+IndentationError   # Syntaxfehler: Falsch eingerueckt
+SystemError        # Komischer Systemfehler
+TypeError          # Falscher Typ
+ValueError         # Falscher Wert
+
+
+Warning            # Allgemeine Warnung
+
+DeprecationWarning # Warnung: Veraltete Funktion / Klasse wird verwendet
+ImportWarning      # Warnung beim Importieren
+\end{lstlisting}
+
+Da wir in diesem Kurs  ``abgeleitete Klassen'' nicht behandelt haben, erklären wir hier nur, wie man eigene Ausnahmen erstellt, aber nicht wie das im Detail funktioniert.
+Eine eigenen Ausnahmetyp erstellt man so:
+\begin{lstlisting}
+class meine_ausnahme(Exception): pass
+\end{lstlisting}
+Dann kann man im \lpy{try-except} Konstrukt seinen eigenen Ausnahmetyp verwenden.
+Hier ein Beispiel:
+\begin{lstlisting}
+import math
+
+class NichtQuadratisch(Exception) : pass
+class KeineReelenLoesungen(Exception) : pass
+
+def loese_quad_gl(a,b,c):
+  if a == 0:
+    ausnbeschr = 'Nicht quadratisch a={}, b={}, c={}'.format(a,b,c)
+    ausnahme = NichtQuadratisch(ausnbeschr)
+    raise ausnahme
+  if b**2 - 4.0*a*c < 0:
+    ausnbeschr = 'Keine reelen Loesungen a={}, b={}, c={}'.format(a,b,c)
+    ausnahme = KeineReelenLoesungen(ausnbeschr)
+    raise ausnahme
+  x1 = ( -b + math.sqrt( b**2 - 4.0*a*c) ) / (2.0*a)
+  x2 = ( -b - math.sqrt( b**2 - 4.0*a*c) ) / (2.0*a)
+  return x1, x2
+
+try:
+  loese_quad_gl(1,0,-1) # (1,0), (-1,0)
+  loese_quad_gl(1,0,1)  # Ausnahme: Keine reelen Loesungen a=1, b=0, c=1
+  loese_quad_gl(0,0,1)  # Ausnahme: Nicht quadratisch a=0, b=0, c=0
+except (NichtQuadratisch, KeineReelenLoesungen) as ausnahme:
+  print('Meine Ausnahme', ausnahme)
+\end{lstlisting}
+
+Als letztes erklären wir in diesem Abschnitt wie man in einem \lpy{try-except} Konstrukt die ``restlichen Ausnahmentypen'', also solche die mit \lpy{except:} behandelt werden, auch mit \lpy{as} benennen kann.
+Warum das funktioniet erklären wir an dieser Stelle nicht, da man ``abgeleitete Klassen'' für die Erklärung braucht, die haben wir in diesem Kurs aber nicht behandeln können.
+Um also ``die restlichen Ausnahmen'' mit \lpy{as} zu benennen verwendet man die Zeile \lpy{except Exception as ausnahme:}, auch wenn \lpy{Exception} nicht alle sondern nur alle sinnvollen Ausnahmen zusammenfasst.
+Zum Beispiel ist die Ausnahme \lpy{SystemExit} nicht vom Typ \lpy{Exception}.
+Die Ausnahmebehandlung soll so aussehen:
+\begin{lstlisting}
+try:
+  # Programmabschnitt der Ausnahmen ausloesen kann
+except Ausnahmetyp_1 as ausnahme:
+  # Ausnahmetyp 1 behandeln
+...
+except Exception as ausnahme:
+  # Alle anderen sinnvollen Ausnahmen behandeln
+except:
+  raise # Lass das mal lieber den Python Interpreter handhaben.
+# Hier geht der normale Programmfluss weiter
+\end{lstlisting}

@@ -1,0 +1,106 @@
+\definecolor{col_cppkeywords}{HTML}{808000}
+\definecolor{col_cppclasses} {HTML}{800080}
+\definecolor{col_cppmembers} {HTML}{800000}
+
+\lstdefinestyle{CPP}
+{
+  language=C++,          % Für C++ Listings
+  frame=single,
+  numbers=left,
+  numberstyle=\footnotesize,
+  stepnumber=1,
+  numbersep=5pt,
+  basicstyle=\footnotesize\ttfamily\color{black},
+  commentstyle=\itshape\color{gray},
+  morekeywords={
+    complex,
+    int8_t, int32_t, int64_t,
+    size_t,
+    uint8_t, uint32_t, uint64_t,
+  },
+  keywords=[2]{
+    map,
+    ostream,
+    std, string,
+    unordered_set,
+  },
+  keywords=[3]{
+      basis,
+  },
+  keywordstyle=\color{col_cppkeywords},
+  keywordstyle=[2]\color{col_cppclasses},
+  keywordstyle=[3]\color{col_cppmembers},
+}
+\lstdefinestyle{CPPinline}
+{
+  language=C++,          % Für C++ Listings
+  frame=single,
+  numbers=none,
+  basicstyle=\ttfamily\color{black},
+  commentstyle=\itshape\color{gray},
+  morekeywords={
+    complex,
+    int8_t, int32_t, int64_t,
+    size_t,
+    uint8_t, uint32_t, uint64_t,
+  },
+  keywords=[2]{
+    map,
+    ostream,
+    std, string,
+    unordered_set,
+  },
+  keywords=[3]{
+      basis,
+  },
+  keywordstyle=\color{col_cppkeywords},
+  keywordstyle=[2]\color{col_cppclasses},
+  keywordstyle=[3]\color{col_cppmembers},
+}
+\newcommand{\lcpp}[1]{\lstinline[style=CPPinline]{#1}}
+
+\definecolor{col_pykeywords}{HTML}{000080}
+\definecolor{col_pycomments}{HTML}{808080}
+\definecolor{col_pystrings} {HTML}{008000}
+
+\lstdefinestyle{Py}
+{
+  language=Python,
+  frame=single,
+  numbers=left,
+  numberstyle=\footnotesize,
+  stepnumber=1,
+  numbersep=5pt,
+  basicstyle=\footnotesize\ttfamily\color{black},
+  commentstyle=\itshape\color{col_pycomments},
+  stringstyle=\bfseries\color{col_pystrings},
+  keywordstyle=\bfseries\color{col_pykeywords},
+}
+\lstdefinestyle{Pyinline}
+{
+  language=Python,
+  frame=single,
+  numbers=none,
+  basicstyle=\ttfamily\color{black},
+  commentstyle=\itshape\color{col_pycomments},
+  stringstyle=\bfseries\color{col_pystrings},
+  keywordstyle=\bfseries\color{col_pykeywords},
+}
+\lstdefinelanguage{plain}
+{
+  frame=single,
+  numbers=left,
+  numberstyle=\footnotesize,
+  stepnumber=1,
+  numbersep=5pt,
+  basicstyle=\footnotesize\ttfamily\color{black},
+}
+
+
+\newcommand{\lpy}[1]{\lstinline[style=Pyinline]{#1}}
+
+\lstset{
+  language=Python,
+  style=Py,
+  literate={~} {$\bm{\scriptstyle\sim}$}{1}
+}

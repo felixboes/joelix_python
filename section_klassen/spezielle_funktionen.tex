@@ -1,0 +1,235 @@
+\subsection{Spezielle Funktionen}
+\label{section:klassen:spezielle_funktionen}
+In diesem Abschnitt erklären wir zunächst was ``Duck-Typing'' ist,
+listen die wichtigsten speziellen Memberfunktionen auf und
+verbessern unser Matrizenbeispiel aus Abschnitt \ref{section:klassen:klassen_definieren_und_nutzen}.
+
+
+\subsubsection{Duck-Typing}
+Als ``Duck-Typing'' bezeichnet man das Konzept, dass ein Objekt durch sein Verhalten und nicht durch seinen Bauplan beschrieben wird.
+Der Name Duck-Typing ist an ein Gedicht von James Rileys angelehnt:
+\begin{center}
+\begin{minipage}{.8\columnwidth}
+\centering
+When I see a bird that walks like a duck and swims like a duck and quacks like a duck, I call that bird a duck.
+\end{minipage}
+\end{center}
+Auch \Python unterstützt Duck-Typing.
+Zum Beispiel können viele Klassen als \lpy{bool} oder \lpy{str} interpretiert werden.
+Das funktioniert genau dann, wenn die Klasse die spezielle Memberfunktionen \lpy{__str__} implementiert und
+diese einen String zurückgibt.
+Dann kann man mit der Funktion \lpy{str} das Objekt als String interpretieren.
+
+Wenn wir uns unsere sehr naive Matrixklasse aus Abschnitt \ref{section:klassen:eine_sehr_naive_matrixklasse} nochmal anschauen,
+so kann \Python diese momentan noch nicht als String interpretieren (denn sie implementiert spezielle Memberfunktionen \lpy{__str__} noch nicht).
+Allerdings kann sie als String interpretiert werden, wenn wir den Namen der Memberfunktion \lpy{string} durch \lpy{__str__} ersetzen.
+Soland wir das erledigt haben, kann \Python den folgenden Code interpretieren:
+\begin{lstlisting}
+m = Matrix(zeilen=3, spalten=4)
+print(m)  # Druckt die Darstellung der Matrix aus.
+\end{lstlisting}
+
+Die Funktion \lpy{str} wird vom \Python-Standard definiert und könnte ungefähr so aussehen:
+\begin{lstlisting}
+def my_str( t ):
+  """Nachbau der eingebauten Funktion 'str'."""
+  s = t.__str__()    # Hole den String
+  if type(s) is str: # Schaue ob s den richtigen Typ hat
+    return s         # Gibt den String s zurueck
+  else:              # Fehlerbehandlung
+    typename = type(s).__name__
+    raise TypeError("__str__ returned non-string (type "+typename+")")
+\end{lstlisting}
+
+
+\subsubsection{Spezielle Memberfunktionen}
+In diesem Abschnitt besprechen wir kurz die wichtigsten speziellen Memberfunktionen.
+Dabei machen wir optionale Funktionsparameter mit \lpy{[...]} kenntlich.
+
+Der Konstruktor wird beim Erstellen eines Objekts aufgerufen und soll das Objekt in Ausgangszustand bringen.
+Dem Konstruktor kann man weitere Parameter übergeben.
+\begin{lstlisting}
+__init__(self [,...])  # Konstruktor (wird beim Erstellen ausgefuehrt)
+\end{lstlisting}
+Ist der Konstruktor definiert, kann man ein Objekt der Klasse \lpy{K} in Abhängigkeit von den Parametern \lpy{p_1, ..., p_r} so erstellen:
+\begin{lstlisting}
+var = K(p_1, ..., p_r)
+\end{lstlisting}
+
+Auf den Destuktor gehen wir hier nicht ein, da wir das sogenannte ``Reference Counting'' und den sogenannten ``Garbadge Collector''
+in diesem Skript nicht ausreichend behandelt haben.
+
+Ein Objekt kann als String, Ganzzahl, Gleitkommazahl bzw.\ Boolean interpretiert werden,
+sofern die entsprechende spezielle Funktion definiert ist.
+\begin{lstlisting}
+__str__(self)   # Konvertiert Objekt zu String
+__int__(self)   # Konvertiert Objekt zu Integer
+__float__(self) # Konvertiert Objekt zu Float
+__bool__(self)  # Konvertiert Objekt zu Boolean
+\end{lstlisting}
+Ist beispielsweise \lpy{__bool__} implementiert, kann man ein Objekt \lpy{obj} mit \lpy{bool(obj)} als Boolean interpretieren.
+
+Die nachfolgenden speziellen Funktionen ermöglichen es, zwei Objekte miteinander zu vergleichen.
+\begin{lstlisting}
+__lt__(self, other) # Implementiert: obj <  other
+__le__(self, other) # Implementiert: obj <= other
+__eq__(self, other) # Implementiert: obj == other
+__ne__(self, other) # Implementiert: obj != other
+__gt__(self, other) # Implementiert: obj >  other
+__ge__(self, other) # Implementiert: obj >= other
+\end{lstlisting}
+Hier ist es ganz wichtig darauf zu achten, dass diese Funktion konsistent implementiert werden.
+Zum Beispiel will man, dass wenn \lpy{obj == other} gilt dann auch \lpy{obj <= other} erfüllt ist.
+Außerdem muss man ganz doll aufpassen, wenn man zwei Objekte vergleichen möchte, die einen verschiedenen Typ haben.
+Wenn man das nicht möchte, kann man gegebenfalls eine Ausnahme auslösen:
+\begin{lstlisting}
+class K:
+  ... # Konstruktor und weitere Funktionen
+  def __eq__(self, other):         # Definition der Fkt __eq__
+    if type(self) == type(other):  # Wenn die Typen gleich sind
+      ...                          # Pruefe Objekte auf Gleichheit
+    else:                          # Sonst:
+      raise TypeError("Typen sind verschieden") # Loese Ausnahme aus
+  ... # Weitere Funktionen
+\end{lstlisting}
+An dieser Stelle wollen wir darauf aufmerksam machen, dass das Vergleichen der Typen von zwei Objekten, so wie im obigen Beispiel, bei abgeleiteten Klassen zu ungewollten Effekten führen kann.
+Da wir abgeleitete Klassen in diesem Skript nicht besprechen, gehen wir nicht näher auf diese Bemerkung ein.
+
+Um ein Objekt als Schlüssel für ein Verzeichniss machen zu können, muss es ``hashbar'' sein.
+Genauer muss man die spezielle Funktion \lpy{__hash__} implementieren.
+Das besprechen wir ausführlicher im Abschnitt \ref{section:klassen:hashbare_objekte}.
+\begin{lstlisting}
+__hash__(self)  # Objekt hashen
+\end{lstlisting}
+
+Um ein Objekt \lpy{obj} wie eine Funktion aufzurufen, also um dem Ausdruck \lpy{obj(...)} interpretierbar zu machen,
+muss die spezielle Funktion \lpy{__call__} implementiert werden.
+Ein Objekt, welches sich in diesem Sinne wie eine Funktion verhält, nennt man \emph{Funktionsobjekt}.
+\begin{lstlisting}
+__call__(self,[, args...]) # Objekt wird zum Funktionsobjekt
+\end{lstlisting}
+
+Um ein Objekt \lpy{obj} wie ein Verzeichniss (siehe Abschnitt \ref{section:std_data_types:verzeichnisse}) zu behandeln, implementiert man die folgenden speziellen Funktionen:
+\begin{lstlisting}
+__len__(self)                 # Laenge des Objekts
+__getitem__(self, key)        # Implementiert: obj[key]
+__setitem__(self, key, value) # Implementiert: obj[key] = value
+__delitem__(self, key)        # Implementiert: del obj[key]
+__reversed__(self)            # Implementiert: reversed(obj)
+__contains__(self, item)      # Implementiert: is item in obj
+\end{lstlisting}
+An dieser Stelle machen wir darauf aufmerksam, welche Werte der Schlüssel \lpy{key} haben kann.
+Ein Schlüssel muss immer ein hashbares Objekt sein.
+Im einfachsten Beispiel sind das unveränderbare Standardtypen wie \lpy{int} oder \lpy{str}.
+Es können aber auch benutzerdefinierte Klassen sein, welche die spezielle Funktion \lpy{__hash__} implementieren (siehe auch Abschnitt \ref{section:klassen:hashbare_objekte}).
+In diesen beiden Beispielen wird \lpy{obj[key] = z} so interpretiert:
+\begin{lstlisting}
+obj.__setitem__(key,z)    # Aequivalent zu obj[key] = z
+\end{lstlisting}
+Man kann aber auch mehrere Schlüssel zum Zugriff benutzen.
+Diese werden dann zu einem einzigen Tupel gebündelt.
+Schauen uns zum Beispiel an, wie \lpy{obj[key1,key2] = z} interpretiert wird:
+\begin{lstlisting}
+obj.__setitem__( (key_1,key_2) ,z) # Aequivalent zu obj[key1,key2] = z
+\end{lstlisting}
+In unserem Matrixbeispiel aus Abschnitt \ref{section:klassen:eine_sehr_naive_matrixklasse},
+würden wir sehr gern mit \lpy{M[i,j]} den Koeffizient in der $i$-ten Zeile und der $j$-ten Spalte setzen.
+Die spezielle Memberfunktionen \lpy{__setitem__} kann so implementiert werden:
+\begin{lstlisting}
+class Matrix:
+  """Eine native Matrixklasse"""
+  ...           # Konstruktor und weitere Funktionen
+  def __setitem__(self, ij ,z):
+    i,j = ij    # Wir interpretieren ij als Tupel ij = (i,j)
+    self.elemente[i*self.zeilen + j] = z # Setze Koeffizient
+  ...           # Weitere Funktionen
+\end{lstlisting}
+
+In \Python ist es (genauso wie in \CPP) möglich aus zwei Objekten mithilfe der binären Operatoren
+\lpy{+}, \lpy{-}, \lpy{*} usw.\ ein neues Objekt zu erstellen.
+Dazu implementiert man die folgenden speziellen Memberfunktionen.
+Wir machen hier darauf aufmerksam, dass die speziellen Memberfunktionen die beiden Objekte \lpy{obj} und \lpy{other}
+in so gut wie allen Fällen nicht veränderen, da man aus den beiden Objekten \lpy{obj} und \lpy{other}
+mithilfe des Operators \lpy{op} ein neues Objekt \lpy{obj op other} erstellt.
+\begin{lstlisting}
+__add__(self, other)      # Implementiert: obj  + other
+__sub__(self, other)      # Implementiert: obj  - other
+__mul__(self, other)      # Implementiert: obj  * other
+__truediv__(self, other)  # Implementiert: obj  / other
+__floordiv__(self, other) # Implementiert: obj // other
+__mod__(self, other)      # Implementiert: obj  % other
+__pow__(self, other)      # Implementiert: obj ** other
+__lshift__(self, other)   # Implementiert: obj << other
+__rshift__(self, other)   # Implementiert: obj >> other
+__and__(self, other)      # Implementiert: obj  & other
+__xor__(self, other)      # Implementiert: obj  ^ other
+__or__(self, other)       # Implementiert: obj  | other
+\end{lstlisting}
+
+Es ist wichtig zu bemerken, dass keine die obigen binären Operationen symmetrisch ist:
+\begin{lstlisting}
+obj1.__add__(obj2)        # obj1 + obj2
+obj2.__add__(obj1)        # obj2 + obj1
+\end{lstlisting}
+Es kommt vor, dass man zwei Objekte von verschiedenen Typen miteinander verbinden möchte.
+Hier gibt es zwei Möglichkeiten.
+Entweder man implementiert die binären Operationen für beide Klassen oder man implementiert sie nur für eine.
+Letzteres macht in vielen Fällen mehr Sinn, zum Beispiel wenn eine der beiden Klassen schon von jemand anderem implementiert ist.
+Wie Letzteres funktioniert erklären wir jetzt.
+
+Nehmen wir an, wir wollen zwei Objekte \lpy{obj1} und \lpy{obj2} mit einer binären Operation \lpy{op} verbinden,
+i.e.\ wir wollen den Ausdruck \lpy{obj1 op obj2} interpretierbar machen.
+Wir verlangen dass
+(a) die beiden Objekte verschiedene Typen haben und
+(b) das linke Objekt \lpy{obj1} die spezielle Memberfunktion \lpy{__op__} nicht implementiert hat.
+Dann können wir \lpy{obj1 op obj2} durch die spezielle Memberfunktion \lpy{__rop__} vom rechten Objekt \lpy{obj2} interpretierbar machen.
+\begin{lstlisting}
+obj2.__rop__(obj1)         # obj1 op obj2 falls (a) und (b) gelten
+\end{lstlisting}
+
+Die folgende Liste erklärt die binären Operationen, die wir im Sinne des vergangenen Abschnitts interpretierbar machen können.
+Auch hier machen wir darauf aufmerksam, dass diese binären Operationen nach Möglichkeit ein neues Objekt erstellen sollen ohne dabei die Operanden zu verändern.
+\begin{lstlisting}
+__radd__(self, other)      # Implementiert: other  + obj
+__rsub__(self, other)      # Implementiert: other  - obj
+__rmul__(self, other)      # Implementiert: other  * obj
+__rtruediv__(self, other)  # Implementiert: other  / obj
+__rfloordiv__(self, other) # Implementiert: other // obj
+__rmod__(self, other)      # Implementiert: other  % obj
+__rpow__(self, other)      # Implementiert: other ** obj
+__rlshift__(self, other)   # Implementiert: other << obj
+__rrshift__(self, other)   # Implementiert: other >> obj
+__rand__(self, other)      # Implementiert: other  & obj
+__rxor__(self, other)      # Implementiert: other  ^ obj
+__ror__(self, other)       # Implementiert: other  | obj
+\end{lstlisting}
+
+Wir wissen ja bereits, dass \lpy{c = a + b} ein neues Objekt aus \lpy{a} und \lpy{b} erstellt und dass sich die Variable \lpy{c} im Anschluss darauf bezieht.
+Insbesondere bleiben die Objekte \lpy{a} und \lpy{b} unverändert.
+Dasslbe gilt für \lpy{a = a + b}.
+Insbesondere ist \lpy{a = a + b} etwas anderes als \lpy{a += b}.
+Das haben wir zum Beispiel bei Listen im Abschnitt \ref{section:std_data_types:sequenzen:listen} gesehen.
+Mit den folgenden speziellen Memberfunktionen realisiert man die Operationen der Form \lpy{a += b}, \lpy{a -= b}, usw..
+\begin{lstlisting}
+__iadd__(self, other)      # Implementiert: obj  += other
+__isub__(self, other)      # Implementiert: obj  -= other
+__imul__(self, other)      # Implementiert: obj  *= other
+__itruediv__(self, other)  # Implementiert: obj  /= other
+__ifloordiv__(self, other) # Implementiert: obj //= other
+__imod__(self, other)      # Implementiert: obj  %= other
+__ipow__(self, other)      # Implementiert: obj **= other
+__ilshift__(self, other)   # Implementiert: obj <<= other
+__irshift__(self, other)   # Implementiert: obj >>= other
+__iand__(self, other)      # Implementiert: obj  &= other
+__ixor__(self, other)      # Implementiert: obj  ^= other
+__ior__(self, other)       # Implementiert: obj  |= other
+\end{lstlisting}
+
+Wie man den Absolutbetrag und die uniären Operationen \lpy{-ob}, \lpy{+ob} und \lstinline[style=Pyinline]|~ob| interpretierbar macht,
+erklärt die nachfolgende Liste.
+\begin{lstlisting}
+__abs__(self, other)      # Absolutbetrag des Objekts
+__neg__(self, other)      # Implementiert: -obj
+__pos__(self, other)      # Implementiert: +obj
+__invert__(self, other)   # Implementiert: ~obj
+\end{lstlisting}

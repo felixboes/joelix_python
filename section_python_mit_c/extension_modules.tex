@@ -1,0 +1,171 @@
+\subsection{Extension Modules}
+\label{section:python_mit_c:extension_modules}
+Bevor wir erklären, was ``Extension Modules'' sind und wie sie in \Python eingebunden werden können, machen wir darauf aufmerksam,
+dass Extension Modules nur mit dem \Python-Interpreter CPython funkionieren:
+``The C extension interface is specific to CPython, and extension modules do not work on other Python implementations.'',
+see \cite[Extending Python with C or C++; \S 1]{Python3, Python2}.
+Das liegt daran, wie Extension Modules technisch umgesetzt sind.
+Der \Python-Interpreter CPython ist ein in \C geschriebenes Programm.
+So wie alle in \C geschriebenen Programme, kann auch CPython in \C geschriebene Bibliotheken zur Laufzeit nachladen und benutzen.
+Ein Extension Module ist (rein technisch gesehen) eine \C Bibliothek, die CPython zur Laufzeit nachladen und benutzen kann.
+
+Nun besprechen wir, wann man Extension Modules verwenden sollte und wie man sie verwendet.
+
+\subsubsection{Die Ausgangssituation}
+Gehen wir davon aus, dass wir in einem \Python Projekt eine Funktion \lpy{addition_py} haben, die besonders schnell ausgeführt werden muss oder Hardwarezugriff braucht.
+Der Einfachheit halber wollen wir davon ausgehen, dass \lpy{addition_py} eine feste Anzahl von Parametern eines festen Typs benötigt und einen definierten Ausgabetyp hat.
+
+\subsubsection{Schnelle C-Funtkion implementieren}
+Als erstes implementieren wir eine in \C geschriebenene Funktion \lcpp{addition}, die sich wie die Funktion \lpy{addition_py} verhält.
+Außerdem binden wir die \lcpp{<Python.h>} ein, die vom \Python-Standard bereit gestellt wird%
+\footnote{Es kann sein, dass man die Entwicklerbibliotheken nachträglich installieren muss.
+Unter Debianderivaten geschieht dass mit \lstinline[language=bash]|sudo apt-get install python3-dev|.}.
+Es ist wichtig, dass \lcpp{<Python.h>} vor allen anderen Bibliotheken einbegunden wird,
+denn \lcpp{<Python.h>} stellt gewissen Makros bereit, welche die anderen eingebundenen Bibliotheken unter Umständen modifiziert.
+Unser Beispiel sieht also momentan so aus:
+\begin{lstlisting}[language=C++, style=CPP]
+// Datei: addition.c
+// Die Python.h muss vor allen anderen Bibliotheken eingebunden werden.
+#include <Python.h>
+
+int addition( int op1, int op2 )
+{
+  return op1 + op2;
+}
+\end{lstlisting}
+
+\subsubsection{Jede schnelle C-Funktion braucht eine Hilfsfunktion}
+Nun erstellen wir (immer noch in \C) für jede schnelle \C-Funktion genau eine Hilfsfunktionen.
+Mithilfe der Hilfsfunktionen kann der (ebenfalls in \C geschriebenene) \Python-Interpreter CPython unsere Funktion \lcpp{addition} innerhalb unseres \Python Projekts aufrufen.
+Wir erklären nun, wie die Hilfsfunktion aufgebaut ist.
+
+(1) Die Signatur einer jeden Hilfsfunktionen ist:
+\begin{lstlisting}[language=C++, style=CPP]
+static PyObject* hilfsfunktionsname( PyObject* self, PyObject* args )
+\end{lstlisting}
+
+(2) Nun definiert man alle \C-Variablen, die wir für den Aufruf unserer \C-Funktion brauchen.
+Das beinhaltet eine Variable für den Rückgabewert unserer \C-Funktion.
+\begin{lstlisting}[language=C++, style=CPP]
+static PyObject* add_hilfsfkt( PyObject* self, PyObject* args )
+{
+  // Erstelle fuer Rueckgabe und jeden Parameter eine Variable.
+  int op1, op2, reuckgabe;
+  // Hier gehts dann gleich weiter
+  // ...
+}
+\end{lstlisting}
+
+(3) Dann interpretieren wir die in \Python übergebenen Parameter als \C-Variablen.
+Dazu benutzen wir die \C-Funktion
+\begin{lstlisting}[language=C++, style=CPP]
+int PyArg_ParseTuple( PyObject* args, const char* format, ... )
+\end{lstlisting}
+Was das erste Argument ist, müssen wir hier nicht nicht verstehen.
+Das zweite Argument ist ein (konstanter) String, der erklärt, wie die übergebenen \Python-Parameter in \C-Variablen konvertiert werden sollen.
+Dieses Konzept sollte von der \C-Funktion \lcpp{printf} bekannt sein.
+Wir behandeln hier nur den einfachsten Fall, i.e.\ der \Python-Funktion werden nur die folgenden Typen übergeben: \lpy{int}, \lpy{float} oder \lpy{str}.
+Wie man andere \Python-Objekte zu \C-Variablen konvertiert und wie man mit variablen Parametern umgeht behandeln wir hier nicht und verweisen auf \cite[Extending Python with C or C++; \S 1.7]{Python3}.
+Hat die \Python-Funktion genau $k$ Parameter \lpy{p_1,...,p_k} und soll der $i$-te Parameter als \lpy{int}, \lpy{float} bzw.\ \lpy{str} interpretiert werden,
+so erstellen wir einen String der Länge $k$, dessen $i$-tes Zeichen \lpy{'i'}, \lpy{'f'} bzw.\ \lpy{'z'} ist.
+Im Anschluss übergeben wir der \C-Funktion \lcpp{PyArg_ParseTuple} genau $k$ Referenzen auf die Objekte, die wir im vorherigen Schritt erstellt haben.
+In unserem Beispiel sieht die Hilfsfunktion bis jetzt also so aus:
+\begin{lstlisting}[language=C++, style=CPP]
+static PyObject* add_hilfsfkt( PyObject* self, PyObject* args )
+{
+  // Erstelle fuer Rueckgabe und jeden Parameter eine Variable.
+  int op1, op2, reuckgabe;
+  // Wandel Python-Variablen in C-Variablen um.
+  PyArg_ParseTuple( args, "ii", &op1, &op2 )
+  // Hier gehts dann gleich weiter
+  // ...
+}
+\end{lstlisting}
+Die Funktion \lcpp{PyArg_ParseTuple} gibt genau dann \lcpp{0} zurück, wenn die Konvertierung fehlgeschlagen hat.
+In diesem Fall wollen wir die Hilfsfunktion ebenfalls abbrechen und geben \lcpp{NULL} zurück.
+
+(4) Hat die Konvertietung der \Python-Parameter in \C-Variablen funktioniert, können wir unsere schnelle \C-Funktion mit den gegebenen Parametern aufrufen und den Rück\-ga\-be\-wert speichern.
+
+(5) Nun konvertieren wir den Rückgabewert unserer schnellen \C-Funktion in ein \Python-Objekt und geben dieses als Rückgabewert der Hilfsfunktion zurück.
+Die Konvertierung geschieht mit der \C-Funtkion \lcpp{Py_BuildValue( char* , ... )}.
+Ähnlich wie oben gehen wir hier davon aus, dass der Rückgabewert unserer schnellen \C-Funktion der Typ \lcpp{int}, \lcpp{float} oder \lcpp{char*} ist.
+Für andere Rückgabetypen verweisen wir auf \cite[Extending Python with C or C++; \S 1.9]{Python3}.
+Der zu übergebe String ist \lstinline[language=C++,style=CPPinline]|"i"|, \lstinline[language=C++,style=CPPinline]|"f"| bzw.\ \lstinline[language=C++,style=CPPinline]|"s"|
+je nachdem ob unser Rückgabetyp unserer schnellen \C-Funktion \lcpp{int}, \lcpp{float} oder \lcpp{char*} ist.
+
+Damit sieht die fertige Hilfsfunktion für unser Beispiel so aus:
+\begin{lstlisting}[language=C++, style=CPP]
+static PyObject* add_hilfsfkt( PyObject* self, PyObject* args )
+{
+  // Erstelle fuer Rueckgabe und jeden Parameter eine Variable.
+  int op1, op2, reuckgabe;
+  // Wandel Python-Variablen in C-Variablen um.
+  if( !PyArg_ParseTuple( args, "ii", &op1, &op2 ) ) return NULL;
+  // Rufe die C-Funktion auf.
+  reuckgabe = addition( op1, op2 );
+  // Wandle C-Variable in Python-Variable um.
+  return Py_BuildValue( "i", reuckgabe );
+}
+\end{lstlisting}
+
+\subsubsection{Die Hilfsfunktion werden in einem Modul zusammengefasst}
+Jetzt beschreiben wir ein Modul \lpy{hilfsmodul} welches am Ende in \Python eingebunden werden kann und unsere Funktionen bereit stellt.
+Ein Modul bestehend aus einer sogenannten ``Method Table'' und einer ``Modulinitialisierung''.
+Die Method Table ist ein Array von \lcpp{struct}s bestehend aus den vier Feldern:
+Der Python-Name der Funktion;
+der Funktionspointer auf die in \C implementierte Funktion;
+der \lcpp{enum} der die Parameterübergabe beschreibt (siehe unten);
+die Python-Beschreibung der Funktion.
+Der Array wird mit \lstinline[language=C++,style=CPPinline]|{NULL, NULL, 0, NULL}| beendet.
+
+Der besagte \lcpp{enum} beschreibt die Möglichkeiten wie die Parameter übergeben werden.
+Wir konzentrieren uns hier einzig und allein auf den Wert \lcpp{METH_VARARGS} welcher der einfachen Übergabe von Variablen entspricht.
+Die anderen Möglichkeiten Variablen zu übergeben sind in \cite[Extending Python with C or C++; \S 1.4]{Python3} beschrieben.
+
+Die Method Table für unser Beispiel sieht so aus:
+\begin{lstlisting}[language=C++, style=CPP]
+static PyMethodDef HilfsFunktionen[] =
+{
+  {"addition_py", add_hilfsfkt, METH_VARARGS, "Addiere zwei Ganzzahlen"},
+  {NULL, NULL, 0, NULL}
+};
+\end{lstlisting}
+
+Nun können wir unsere Modulinitialisierung anfertigen.
+Die sieht für ein einfaches Projekt immer so aus (wobei man \lstinline[language=C++,style=CPPinline]|"hilfsmodul"| durch einen beliebigen Namen für sein Modul ersetzten kann und \lcpp{HilfsFunktionen} der Name der Method Table ist).
+\begin{lstlisting}[language=C++, style=CPP]
+PyMODINIT_FUNC inithilfsmodul(void)
+{
+  (void) Py_InitModule("hilfsmodul", HilfsFunktionen);
+}
+\end{lstlisting}
+
+Die gesamte \C-Datei sieht demnach so aus:
+\lstinputlisting[language=C++, style=CPP]{code/addition.c}
+
+\subsubsection{Das Modul kompileren und benutzen}
+Jetzt ist es an der Zeit, das Modul zu bauen.
+Dazu benutzen wir ein einfaches \Python Skript.
+Es besteht aus wenigen Zeilen Code.
+Wir binden \lpy{distutils.core} ein,
+definieren unsere Erweiterung (bestehend aus einem Namen und einer Liste von zu kompilierenden \C-Dateien)
+und rufen die Funktion auf, die unsere Erweiterung baut.
+Die Namen der Variablen sind selbsterklärend.
+\lstinputlisting[language=Python]{code/modul_bauen.py}
+Nun rufen wir das Skript zweimal auf.
+Im ersten Schritt wird unser Modul gebaut und im zweiten Schritt wird es installiert, so dass es vom \Python-Interpreter CPython genutzen werden kann.
+\begin{lstlisting}[language=bash]
+python modul_bauen.py build
+python modul_bauen.py install --user
+\end{lstlisting}
+Von jetzt an kann man unsere Funktion durch das Modul \lpy{hilfsmodul} aufrufen.
+\begin{lstlisting}
+import hilfsmodul
+print ('4 + 5 =', hilfsmodul.addition_py(4,5))
+\end{lstlisting}
+
+Wird die \C-Datei verändert erneuert man das installierte Modul wie folgt.
+\begin{lstlisting}[language=bash]
+python modul_bauen.py build
+python modul_bauen.py install --user --force
+\end{lstlisting}
