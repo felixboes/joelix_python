@@ -23,8 +23,8 @@
 \RequirePackage{hyperref}
 \RequirePackage[all]{hypcap}
 
-\newcommand{\Progkursbeschreibung}{Python-Programmierkurs Mathematik 2017 von Clelia, Felix und Johannes}
-\newcommand{\Progkurswebseite}{\url{http://fsmath.uni-bonn.de/de/AdvProgkurs2017}}
+\newcommand{\Progkursbeschreibung}{Python-Programmierkurs Mathematik 2018 von Felix und Johannes}
+\newcommand{\Progkurswebseite}{\url{http://fsmath.uni-bonn.de/de/AdvProgkurs2018}}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
