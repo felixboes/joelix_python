@@ -1,7 +1,7 @@
 \section{Das Python Datenmodell}
 \label{section:datamodel}
 Ein wesentlicher Unterschied zwischen \CC und \Python ist das Verhalten von Daten im Speicher und den Zugriff darauf.
-Um den Unterschied zu \CC klarer zu machen, beginnen wir mit einer kurzen Wiederholung
+Um den Unterschied zu \CC klarer zu machen, beginnen wir mit einer kurzen Wiederholung.
 
 
 \subsection{Wiederholung: Daten in C und C++}
@@ -47,8 +47,10 @@ Alle Typen in \CC sind ohne weiteres ``mutable'', es sei denn, sie bekommen das 
 
 In \Python sind folgende Objekte immutable:
 die ganze Zahl \lpy{3} (siehe Abschnitt \ref{section:std_data_types:zahlen}),
-das Tupel \lpy{(1, 'a')} (siehe Abschnitt \ref{section:std_data_types:sequenzen}) und
+das Tupel \lpy{(1, 'a')} (siehe Abschnitt \ref{section:std_data_types:sequenzen}),
+der String \lpy{'Johannes'} (siehe Abschnitt \ref{section:std_data_types:sequenzen:str}) und
 der leere Typ \lpy{None} (siehe Abschnitt \ref{section:std_data_types:none}).
+
 Die folgenden Objekte sind mutable:
 Die Liste \lpy{[1, 'a']} (siehe Abschnitt \ref{section:std_data_types:sequenzen}),
 das Verzeichnis \lstinline[style=Pyinline]|{ 'Felix' : 405, 'Jonathan' : 599  }| (siehe Abschnitt \ref{section:std_data_types:verzeichnisse})

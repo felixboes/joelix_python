@@ -8,7 +8,7 @@ In den nachfolgenden Kapiteln besprechen wir einige der Bausteine nochmal im Det
 \label{section:crashkurs:kommentare}
 Kommentare in \Python beginnen mit \lpy{#} und enden am Ende der Zeile.
 Sie verhalten sich also ganz genau wie Kommentare in \CC, die mit \lcpp{//} beginnen%
-\footnote{Die Kommentare \lcpp{//} wurden in \CNeunundneunzig (siehe \cite{C99}) eingeführt.}.
+\footnote{Die Kommentare \lcpp{//} wurden in \CNeunundneunzig eingeführt, siehe \cite{C99}.}.
 Gut platzierte Kommentare dürfen in keinem Programm fehlen.
 Ein schlecht kommentiertes Programm ist ein Anzeichen dafür, dass es von einem schlechten Programmierer geschrieben wurde.
 
@@ -16,7 +16,8 @@ Ein schlecht kommentiertes Programm ist ein Anzeichen dafür, dass es von einem 
 \subsection{Print}
 \label{section:crashkurs:print}
 So gut wie alle Objekte können durch die \Python Funktion \lpy{print} auf der Standardausgabe ausgegeben werden.
-Das liegt daran, dass die meisten Objekte Klassen sind und die Funktion \lpy{__str__} implementieren (auch wenn wir das jetzt noch nicht verstehen; siehe Abschnitt \ref{section:klassen:spezielle_funktionen}).
+Das liegt daran, dass die meisten Objekte Klassen sind und die Funktion \lpy{__str__} implementieren (auch wenn wir das jetzt noch nicht verstehen;
+siehe Abschnitt \ref{section:klassen:spezielle_funktionen}).
 Die Funktion \lpy{print} ist für \PythonZwei und \PythonDrei verschieden.
 \begin{lstlisting}
 print 'Hallo', 'Welt'   # Python2
@@ -40,7 +41,7 @@ Ganz ähnlich bekommen wir den Typ eines Objekts mit \lpy{type(x)}.
 \label{section:crashkurs:zahlen}
 In \Python gibt es die Zahlentypen \lpy{int}, \lpy{long}, \lpy{float} und \lpy{complex}.
 Sie verhalten sich (fast) genauso wie die aus \CC bekannten Typen \lcpp{int}, \lcpp{long}, \lcpp{float} und \lcpp{complex}%
-\footnote{Der Typ \lpy{complex} wurde in \CNeunundneunzig (siehe \cite{C99}) eingeführt.}.
+\footnote{Der Typ \lpy{complex} wurde in \CNeunundneunzig eingeführt, siehe \cite{C99}.}.
 Man erstellt ein Objekt vom Typ \lpy{int}, durch Angabe einer ganzen Zahl oder durch Aufrufen der Funktion \lpy{int}.
 Ähnlich erstellt man ein Objekt vom Typ \lpy{float}, durch Angabe einer Kommazahl oder durch Aufrufen der Funktion \lpy{float}.
 \begin{lstlisting}
