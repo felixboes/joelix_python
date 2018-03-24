@@ -69,12 +69,14 @@ Die Division von Ganzzahlen unterscheidet sich in \PythonZwei und \PythonDrei.
 \label{section:crashkurs:strings}
 Strings die eine Zeile lang sind, werden entweder mit \lpy{'} oder mit \lstinline[style=PyInline]|"| begonnen und beendet.
 Soll ein String mehre Zeilen lang sein, kann man ihn mit \lstinline[style=PyInline]|"""| beginnen und beenden.
-Genau wie in \CC gibt es gewisse Zeichen, die nicht direkt geschrieben werden können und mit \lstinline[language=C++,style=CPP]|\| beginnen müssen (zum Beispiel werden neue Zeilen durch \lstinline[language=C++,style=CPP]|\n| ausgedrückt).
+Genau wie in \CC gibt es gewisse Zeichen, die nicht direkt geschrieben werden können und mit \lstinline[language=C++,style=CPP]|\| beginnen müssen
+(zum Beispiel werden neue Zeilen durch \lstinline[language=C++,style=CPP]|\n| ausgedrückt).
 Folgender Code erstellt den String ``Hallo[Neue Zeile]Welt''.
 \begin{lstlisting}
 print( 'Hallo\nWelt' ) # Hallo[neue Zeile]Welt
 \end{lstlisting}
-Es gibt eine große Auswahl an Funktionen, um aus einem gegebenen String einen neuen zu erstellen.
+In \Python sind Strings immutable, das heißt, sie können nicht verändert werden.
+Allerdings gibt eine große Auswahl an Funktionen, um aus einem gegebenen String einen neuen zu erstellen.
 Beispielsweise verknüpft man zwei Strings mit \lpy{+} und die Funktion \lpy{lower} ersetzt alle Großbuchstaben durch Kleinbuchstaben.
 \begin{lstlisting}
 print( 'Hallo' + ' ' + 'Welt' ) # Hallo Welt
@@ -199,15 +201,18 @@ print( sum )             # Drucke sum aus
 
 \subsection{Funktionen}
 \label{section:crashkurs:funktionen}
-Meistens will man sich wiederholende Codeblöcke auslagern und natürlich kann man auch in \Python Funktionen definieren.
+Meistens will man sich wiederholende Codeblöcke in Funktionen auslagern und natürlich kann man auch in \Python Funktionen definieren.
 Jede Funktionsdefinition erstellt ein Objekt, welches der Funktion im Speicher entspricht.
-Außerdem wird eine Variable definiert, welche auf die Funktion im Speicher referenziert.
+Desweiteren wird eine Variable definiert, welche auf die Funktion referenziert.
+Außerdem sollte jede Funktion beschrieben werden:
 \begin{lstlisting}
 def funktionsname(parameter):
+  """Kommentar der die Funktion beschreibt."""
   ausdruck
   ...
 \end{lstlisting}
 Die Variable ist hier \lpy{funktionsname} und zeigt auf das Objekt, welches der definierten Funktion entspricht.
+Die Beschreibung einer gegebenen Funktion \lpy{f} kann im Interpreter mit \lpy{help(f)} abgerufen werden.
 
 Anders als in \CC hat eine Funktion keine Signatur und keinen definierbaren Rückgabetyp.
 Mit \lpy{return} können kein, ein oder mehrere Objekte zurückgegeben werden.
@@ -217,6 +222,7 @@ Werden mehrere Objekte zurückgegeben, so werden diese automatisch in einem \lpy
 Ein Tuple ist eine Liste, die nicht geändert werden kann (siehe Abschnitt \ref{section:std_data_types:sequenzen}).
 \begin{lstlisting}
 def f(i):
+  """Eine nicht so sinnvolle Funktion."""
   if i == 1:
     return 1           # Rueckgabetyp: int,   Rueckgabewert: 1
   elif i == 2:
@@ -234,6 +240,7 @@ Außerdem kann man den Argumenten einer Funktion Standardwerte übergeben.
 Beim Funktionsausruf muss man die Argumente mit Standardwerten nicht angeben, kann es aber.
 \begin{lstlisting}
 def plus(a,b=1):
+  """Addiert a und b und gibt das Ergebnis zurueck."""
   return a+b
 
 plus(4,5)      # = 9
