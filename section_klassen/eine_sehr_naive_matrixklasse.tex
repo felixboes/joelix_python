@@ -13,12 +13,12 @@ class Matrix:
     self.spalten = spalten
     self.elemente = self.zeilen*self.spalten*[0.0]
   
-  def getitem(self,i,j):
+  def getitem(self, i, j):
     """Gibt den Koeffizienten der Matrix in der i-ten Zeile und
        der j-ten Spalte zurueck."""
     return self.elemente[i*self.zeilen + j]
   
-  def setitem(self, i,j ,z):
+  def setitem(self, i, j ,z):
     """Setzt den Koeffizienten der Matrix in der i-ten Zeile und
        der j-ten Spalte auf den Wert z."""
     self.elemente[i*self.zeilen + j] = z

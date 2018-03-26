@@ -170,7 +170,8 @@ Folgende Operationen fügen Objekte hinzu oder entfernen sie.
 a[i] = x       # Ersetze a[i] durch x
 a.insert(i, x) # Fuege x hinter a[i] ein
 a.append(x)    # Fuege x am Ende von a ein
-x = a.pop([i]) # Erhalte x = a[i] und entferne a[i] aus der list
+x = a.pop()    # Erhalte x = a[-1] und entferne a[-1] aus der list
+x = a.pop(i)   # Erhalte x = a[i] und entferne a[i] aus der list
 a.remove(x)    # Entferne die erste Variable mit Wert x
 \end{lstlisting}
 
