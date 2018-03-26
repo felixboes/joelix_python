@@ -21,7 +21,7 @@ Dabei muss (wir oben gefordert) für je zwei Instanzen \lpy{x} und \lpy{y} von \
 Außerdem verlangen wir, dass, falls das Objekt (durch Memberfunktionen) verändert werden kann, so soll \lpy{__eq__} und \lpy{__hash__} unabhängig von dieser Änderung sein.
 
 Hier ein ganz simples Beispiel.
-Wir beschreiben eine Klasse mit dem Namen \lpy{Geldboerse}, inder man 1-Euro Münzen und 1-Cent Münzen speichern kann.
+Wir beschreiben eine Klasse mit Namen \lpy{Geldboerse}, inder man 1-Euro Münzen und 1-Cent Münzen speichern kann.
 Die Anzahl der Münzen soll nach dem Erstellen nicht mehr geändert werden.
 Zwei Geldbörsen sind genau dann gleich, wenn sie dieselbe Anzahl von 1-Euro und 1-Cent Münzen enthalten.
 Als Hashfunktion nehmen wir die Anzahl der 1-Euro Münzen modulo 100.

@@ -43,7 +43,7 @@ Die Konzepte der oberflächlichen und tiefen Kopien sowie die daraus resultieren
 Analoge Aussagen gelten für Mengen.
 
 An dieser Stelle gehen wir noch ein wenig auf die Gleichheit von Mengen ein.
-Wie gesagt, wertet \lpy{s == t} genau dann als \lpy{True} aus, wenn die Elemente von \lpy{s} und \lpy{t} übereinstimmen.
+Wie gesagt, wertet \lpy{s == t} genau dann als \lpy{True} aus, wenn die Elemente von \lpy{s} und \lpy{t} über\-ein\-stim\-men.
 Das heißt aber nicht, dass \lpy{s} und \lpy{t} dieselbe Identität haben, also an der selben Stelle im Speicher stehen.
 Hier ein Beispiel.
 \begin{lstlisting}
@@ -67,13 +67,13 @@ s -= t | ... # Entfernt alle Elemente aus s, die in t, ... sind
 s ^= t       # Entfernt alle Elemente aus s, die nicht gleichzeitig
              # in s und t sind
 add(e)       # Erweitert s um e
-remove(e)    # Entfernt e aus s; loest KeyError aus, wenn e nicht in s ist
+remove(e)    # Entfernt e aus s; loest KeyError aus wenn e nicht in s ist
 discard(e)   # Entfernt e aus s falls e in s ist
 pop()        # Entfernt ein Element aus s und gibt es zurueck
 clear()      # Entfernt alle Elemente aus s
 \end{lstlisting}
 
-Wir bemerken hier nochmal, dass die Operationen nur den Wert der Menge \lpy{s} verändern, die Identität \lpy{id(s)} bleibt bestehen.
+Wir bemerken hier nochmal, dass die Operationen nur den Wert der Menge \lpy{s} ver\-än\-dern, die Identität \lpy{id(s)} bleibt bestehen.
 \begin{lstlisting}
 s = set( range(1, 6,1) ) # Die Menge {1,2,...,5}
 t = set( range(6,11,1) ) # Die Menge {5,6,...,10}

@@ -56,7 +56,7 @@ JoelixBlas
   +--joelix_matrix.py
 \end{lstlisting}
 Nun implementieren wir die Klassen \lpy{JoelixVektor} und \lpy{JoelixMatrix}.
-Um \lpy{JoelixVektor} zu implementieren, brauchen wir die Klasse \lpy{JoelixMatrix} nicht zu kennen.
+Um die Klasse \lpy{JoelixVektor} zu implementieren, brauchen wir die Klasse \lpy{JoelixMatrix} nicht zu kennen.
 Die Datei \lpy{joelix_vektor.py} sieht so aus:
 \begin{lstlisting}
 class JoelixVektor:
@@ -68,8 +68,8 @@ class JoelixVektor:
       # Vektor-Vektor-Addition
   ...
 \end{lstlisting}
-Die Matrix-Matrix-Multiplikation und die Matrix-Vektor-Multiplikation soll durch eine spezielle Memberfunktion von \lpy{JoelixMatrix} realisiert werden.
-Da wir die Klasse \lpy{JoelixVektor} für die Matrix-Vektor-Multiplikation benötigen, binden wir \lpy{joelix_vektor} in \lpy{joelix_matrix} ein:
+Die Matrix-Matrix-Multiplikation und die Matrix-Vektor-Multiplikation soll durch eine spezielle Memberfunktion der Klasse \lpy{JoelixMatrix} realisiert werden.
+Da wir die Klasse \lpy{JoelixVektor} für die Matrix-Vektor-Multiplikation benötigen, binden wir die Klasse \lpy{joelix_vektor} im Modul \lpy{joelix_matrix.py} ein:
 Die Datei \lpy{joelix_matrix.py} sieht so aus:
 \begin{lstlisting}
 # JoelixMatrix.py

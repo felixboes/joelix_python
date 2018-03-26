@@ -158,7 +158,7 @@ Da uns dieses Konzept aus \CC sehr vertraut ist, brauchen wir hier kein Beispiel
 Die \lpy{for}-Schleife führt einen Codeblock für jedes Element einer gegebenen Sequenz (siehe Abschnitt \ref{section:std_data_types:sequenzen}) aus.
 Eine Sequenz kann zum Beispiel eine Liste oder ein String sein.
 \begin{lstlisting}
-for i in s: # der Ausdruck s muss als Sequenz interpretiert werden koennen
+for i in s: # Der Ausdruck s muss als Sequenz interpretiert werden koennen
   ausdruck
   ...
 \end{lstlisting}
@@ -177,7 +177,7 @@ Hier ist unsere Sequenz \lpy{s} ein String mit dem Wert \lpy{Hallo Welt}. In der
 die Werte der einzelnen Zeichen von \lpy{s}, also \lpy{H,a,l,} \lpy{l,o, ,W,e,l} und \lpy{t}. Im zur Schleife gehörenden Block werden 
 diese Zeichen dann einzeln ausgegeben.
 
-Wenn der Codeblock für eine aufsteigende Folge von Zahlen \lpy{from, from+1, ..., to-1} ausgeführt werden soll, nimmt man die Sequenz \lpy{range(from, to)}.
+Wenn der Codeblock für die Folge von Zahlen \lpy{from, from+1, ..., to-1} ausgeführt werden soll, nimmt man die Sequenz \lpy{range(from, to)}.
 Wichtig ist, dass wir das halboffene Interval betrachten, also nur bis \lpy{to-1} und nicht bis \lpy{to} gehen.
 Damit verhält sich der \Python-Code \lpy{for i in range(from, to):} ganz genau wie der \CC-Code \lstinline[language=C++,style=CPPinline]|for(i = from; i < to; ++i) { ... }|.
 Hier ein Beispiel
@@ -226,7 +226,7 @@ def f(i):
   if i == 1:
     return 1           # Rueckgabetyp: int,   Rueckgabewert: 1
   elif i == 2:
-    return 'Hallo', 44 # Rueckgabetyp: tuple, Rueckgabewert: ('Hallo', 44)
+    return 'Hallo', 44 # Rueckgabetyp: tuple, Rueckgabewert: ('Hallo',44)
 
 print( type( f ) )                 # <class 'function'>
 print( type( f(1) ) )              # <class 'int'>
@@ -235,7 +235,8 @@ print( type( f('Gurkenwasser') ) ) # <class 'NoneType'>
 \end{lstlisting}
 Also ist das von \lpy{f(3)} oder auch \lpy{f('Gurkenwasser')} zurückgegebene Objekt \lpy{None}.
 
-Beim Funktionsausruf übergibt man die Parameter entweder in der Reihenfolge wie sie in der Funktionsdefinition spezifiziert sind, oder man übergibt \lpy{parametername=ausdruck}.
+Bei einem Funktionsausruf übergibt man die Funktionsparameter entweder in der Reihenfolge in der sie in der Funktionsdefinition spezifiziert sind,
+oder man übergibt \lpy{parametername=ausdruck}.
 Außerdem kann man den Argumenten einer Funktion Standardwerte übergeben.
 Beim Funktionsausruf muss man die Argumente mit Standardwerten nicht angeben, kann es aber.
 \begin{lstlisting}

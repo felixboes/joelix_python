@@ -76,10 +76,11 @@ Deshalb ist eine sogenannte ``oberflächliche Kopie'' einer Sequenz \lpy{a} ein 
 Das heißt, \lpy{a[0]} und \lpy{b[0]} zeigen auf dasselbe Objekt.
 Schauen wir uns das folgende Beispiel an:
 \begin{lstlisting}
-# In diesem Beispiel bezeichnen wir Listen der Form [i,j] wobei i und j
-# Ganzzahlen sind als Vektoren.
+# In diesem Beispiel bezeichnen wir Listen der Form [i,j]
+# als Vektoren, wobei i und j Ganzzahlen sind.
 
-# Zuerst erstellen wir eine Liste von drei Vektoren und kopieren die Liste
+# Zuerst erstellen wir eine Liste bestehend aus drei Vektoren.
+# Diese kopieren wir dann (oberflaechlich).
 vekt_lst = [ [0,1], [2,3], [5,1] ] # Liste von drei Vektoren
 kopie    = vekt_lst[0:3]           # Oberflaechliche Kopie
 
@@ -101,12 +102,13 @@ deren ``mutable'' Objekte denselben Wert, aber eine verschiedene Identität habe
 (siehe auch Abschnitt \ref{section:module:empfohlene_module:copy}).
 Das geschieht wie folgt.
 \begin{lstlisting}
-# In diesem Beispiel bezeichnen wir Listen der Form [i,j] wobei i und j
-# Ganzzahlen sind als Vektoren.
+# In diesem Beispiel bezeichnen wir Listen der Form [i,j]
+# als Vektoren, wobei i und j Ganzzahlen sind.
 
 import copy
 
-# Zuerst erstellen wir eine Liste von drei Vektoren und kopieren die Liste
+# Zuerst erstellen wir eine Liste bestehend aus drei Vektoren.
+# Diese kopieren wir dann (oberflaechlich).
 vekt_lst = [ [0,1], [2,3], [5,1] ] # Liste von drei Vektoren
 kopie    = copy.deepcopy(vekt_lst) # Tiefe Kopie
 
@@ -125,12 +127,12 @@ print(vekt_lst) # [[  0, 1], [2, 3], [5, 1]]
 
 \subsubsection{tuple}
 \label{section:std_data_types:sequenzen:tuple}
-Der Containertyp \lpy{tuple} ist immutable. Das bedeutet, dass weder einzelne Einträge des Tupels verändert werden können, 
-noch kann die Länge des Tupels verändert werden. Das Tupel \lpy{(3, 'Harry Potter')} beispielsweise wird über den gesamten Verlauf des 
-Programs das Tupel \lpy{(3, 'Harry Potter')} bleiben und kann nicht zu z.B.\ \lpy{(1, 'LotR')} geändert werden. 
+Der Containertyp \lpy{tuple} ist immutable. Das bedeutet, dass weder einzelne Einträge des Tupels verändert werden können,
+noch kann die Länge des Tupels verändert werden. Das Tupel \lpy{(3, 'Harry Potter')} beispielsweise wird über den gesamten Verlauf des
+Programs das Tupel \lpy{(3, 'Harry Potter')} bleiben und kann nicht zu z.B.\ \lpy{(1, 'LotR')} geändert werden.
 
-Dennoch nutzt man Tupel implizit rechts häufig. Unter anderem können, wie im Crashkurs Abschnitt \ref{section:crashkurs:funktionen} bereits angedeutet, Funktionen 
-mehrere Objekte zurückgeben. Diese werden dann zusammen in ein Tupel gepackt, in der Reihenfolge, in der sie nach dem 
+Dennoch nutzt man Tupel implizit rechts häufig. Unter anderem können, wie im Crash\-kurs Abschnitt \ref{section:crashkurs:funktionen} bereits angedeutet, Funktionen
+mehrere Objekte zurückgeben. Diese werden dann zusammen in ein Tupel gepackt, in der Reihenfolge, in der sie nach dem
 \lpy{return}-Statement aufgezählt sind. Das folgende Beispiel veranschaulicht dies:
 
 \begin{lstlisting}
@@ -141,8 +143,8 @@ z = doppeltupelfkt(1,2)
 print( z )              # gibt (2,4) aus
 \end{lstlisting}
 
-\lpy{z} ist nach Aufrufen der Funktion das Tupel \lpy{(2,4)}, d.h.\ wenn eine Funktion mehrere Objekte zurückgibt, werden sie in 
-einem Objekt abgefangen.
+\lpy{z} ist nach Aufrufen der Funktion das Tupel \lpy{(2,4)}, d.h.\ wenn eine Funktion mehrere Objekte zurückgibt,
+werden sie in einem Objekt abgefangen.
 
 Außerdem gibt es für Tupel noch die Möglichkeit der mehrfachen Zuordnung:
 
@@ -150,11 +152,11 @@ Außerdem gibt es für Tupel noch die Möglichkeit der mehrfachen Zuordnung:
 x_1, x_2, ... , x_n = z # z ist Tupel mit len(z) = n
 \end{lstlisting}
 
-Hierbei wird \lpy{z[i-1]} der Variable \lpy{x_i} zugeordnet. Auf diese Weise können auch die Objekte, die eine Funktion 
-zurückgibt, in mehreren Variablen abgespeichert werden statt in nur einem Tupel. Dabei muss darauf geachtet werden, dass 
+Hierbei wird \lpy{z[i-1]} der Variable \lpy{x_i} zugeordnet. Auf diese Weise können auch die Objekte, die eine Funktion
+zurückgibt, in mehreren Variablen abgespeichert werden statt in nur einem Tupel. Dabei muss darauf geachtet werden, dass
 auf der linken Seite der Zuordnung genau so viele Variablen stehen wie das Tupel Elemente hat.
 
-Ansonsten verfügt \lpy{tuple} über keine weiteren (für diesen Kurs bedeutsamen) Operationen --- abgesehen von den Gemeinsamkeiten mit 
+Ansonsten verfügt \lpy{tuple} über keine weiteren (für diesen Kurs bedeutsamen) Operationen --- abgesehen von den Gemeinsamkeiten mit
 anderen Sequenzen, die im vorangegangenen Abschnitt \ref{section:std_data_types:sequenzen:gemeinsamkeiten} beschrieben wurden.
 
 
@@ -237,7 +239,7 @@ Für \lpy{n}, \lpy{m} und \lpy{k} sind auch negative Werte möglich, solange dab
 
 \subsubsection{list comprehension}
 \label{section:std_data_types:sequenzen:list_comprehension}
-Die sogenannten \emph{list comprehension} ist eine sehr praktische Möglichkeit um aus bereits vorhandenen Sequenzen neue Listen zu erstellen.
+Die sogenannten ``list comprehension'' ist eine sehr praktische Möglichkeit um aus bereits vorhandenen Sequenzen neue Listen zu erstellen.
 Hier ist \lpy{a} eine Sequenz und wir wollen all diejenigen \lpy{x} aus \lpy{a} haben, die eine gewisse Bedingung \lpy{cond(x)} erfüllen.
 \begin{lstlisting}
 [ x for x in a if cond(x) ]
@@ -272,7 +274,7 @@ a = ( 'blau', 'anakonda', 'Strasse', 'Anakonda', '42', 'Anakonda' )
 \subsubsection{str}
 \label{section:std_data_types:sequenzen:str}
 Die immutable Sequenz \lpy{str} verfügt über sehr viele selbsterklärende Funktionen.
-Zum Beispiel erstellt man aus einem String \lpy{s} mit \lpy{s.lower()} einen String, der nur aus Kleinbuchstaben besteht. 
+Zum Beispiel erstellt man aus einem String \lpy{s} mit \lpy{s.lower()} einen String, der nur aus Kleinbuchstaben besteht.
 Wir besprechen nun noch kurz die Funktion \lpy{format} und verweisen den interessierten Leser auf \cite[Library, Build-in Types, Text Sequence Type]{Python3}.
 
 Oft macht es Sinn, einen String durch Einsetzung von Variablen zu erzeugen.

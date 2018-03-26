@@ -37,7 +37,7 @@ print(verz3)
 Verzeichnis könnte folgendermaßen aussehen:
 \begin{lstlisting}
 #Verzeichnis speichert Telefonnummern:
-telefonbuch = {'Mama':1234, 'Papa':1234, 'Tina':4242, 'Peter':'Keine Nummer'}
+telefonbuch = {'Mama':333, 'Papa':333, 'Tina':11, 'Peter':'Keine Nr'}
 \end{lstlisting}
 
 Außerdem kann man ein Verzeichnis aus einer Liste von Tupeln erstellen (solange die linke Seite eines jeden Tupels ein hashbares Objekt ist).
@@ -58,7 +58,7 @@ len(d)        # Groesse des Verzeichnisses
 d[key]        # Gibt den Wert d[key] zurueck oder loest eine Ausnahme aus
 d.get(key, x) # Gibt den Wert d[key] zurueck falls er existiert. Sonst
               # wird das Paar (key, x) erstellt und x zurueckgegeben.
-d[key] = wert # Setzt d[key] auf wert (auch wenn key noch nicht existiert)
+d[key] = x    # Setzt d[key] auf x (auch wenn key noch nicht existiert)
 del d[key]    # Entfernt (key, d[key]) oder loest eine Ausnahme aus
 d.pop(key, x) # Entfernt (key, d[key]) und gibt d[key] zurueck falls es
               # existiert. Sonst wird x zurueckgegeben.

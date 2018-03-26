@@ -99,7 +99,7 @@ Nun versuchen wir \lpy{behandle_ausnahmen_nicht()} auszuführen.
 Diese Funktion ruft \lpy{eins_durch_null()} aus.
 In unserem Call Tree haben wir momentan also einen Weg von \lpy{behandle_ausnahmen} über \lpy{behandle_ausnahmen_nicht} zu \lpy{eins_durch_null}.
 Die Funktion \lpy{eins_durch_null} löst eine Ausnahme aus.
-Diese wird an \lpy{behandle_ausnahmen_nicht} weitergegeben und dort nicht behandelt.
+Diese wird (im Call Tree) an die Funktion \lpy{behandle_ausnahmen_nicht} weitergegeben und dort nicht behandelt.
 Also wird sie weitergegeben an \lpy{behandle_ausnahmen}.
 Dort wird sie behandelt.
 In der Ausnahmebehandlung drucken wir:

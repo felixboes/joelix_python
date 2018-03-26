@@ -77,8 +77,8 @@ sondern sie erstellen sogenannte ''iterierbares Objekte``, die den aktuell zu ve
 Dass spart bei großem Input wertvollen Speicher und ist meistens schneller.
 Wir stellen hier nur zwei sehr einfache Funktionen vor und legen der interessierten Leserin \cite[Library, Funktional Programming Tools, itertools]{Python3} an Herz.
 
-Um aus zwei Sequenzen \lpy{A} und \lpy{B} eine Sequenz \lpy{((x,y) for x in A for y in B)} zu erstellen, reicht der angegebene Ausdruck,
-allerdings ist die Funktion \lpy{itertools.product} schneller und speichereffizienter.
+Um aus zwei gegebenen Sequenzen \lpy{A} und \lpy{B} die Sequenz all ihrer Paare zu erstellen, reicht der Ausdruck \lpy{((x,y) for x in A for y in B)}.
+Allerdings ist die Funktion \lpy{itertools.product} schneller und speichereffizienter.
 Hier ein Beispiel:
 \begin{lstlisting}
 import itertools
@@ -221,7 +221,8 @@ Diese gibt (auch wenn wir in diesem Skript nicht genug auf Namespaces eingegange
 Aus diesem machen wir ein Verzeichniss mit der eingebauten Funktion \lpy{vars}.
 Die Schlüssel des Verzeichnisses sind die Namen der Parameter:
 \begin{lstlisting}
-argumente = vars(parser.parse_args()) # Erstellt Verzeichniss d. Argumente
+argumente = vars(parser.parse_args()) # Erstellt ein Verzeichniss
+                                      # aus den uebergebenen Argumenten
 print(argumente)                      # Druckt das Verzeichniss aus
 \end{lstlisting}
 Das ganze versteht man am besten anhand eines Beispiels:
@@ -335,8 +336,8 @@ Für führere \Python-Versionen, kann man \lpy{subprocess.call} verwenden; diese
 
 \subsubsection{sys}
 \label{section:module:empfohlene_module:sys}
-Das Modul \lpy{sys} hält einige Variablen und Funktionen bereit, die start vom \Python-Interpreter abhängen.
-Zum Beispiel ist die \Python-Version durch das Tupel \lpy{sys.version_info} beschrieben und der Standardoutput wird durch \lpy{sys.stdout} abgebildet.
+Das Modul \lpy{sys} hält einige Variablen und Funktionen bereit, die stark vom \Python-Interpreter abhängen.
+Zum Beispiel wird die \Python-Version des gegebenen \Python-Interpreters durch das Tupel \lpy{sys.version_info} beschrieben und der Standardoutput wird durch \lpy{sys.stdout} abgebildet.
 
 
 \subsubsection{Weitere Python Module}
