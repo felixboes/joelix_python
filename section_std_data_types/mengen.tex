@@ -3,7 +3,7 @@
 In Gegensatz zu Sequenzen, die wir im Abschnitt \ref{section:std_data_types:sequenzen} behandelt haben, sind Mengen ``ungeordnete Container''.
 Ähnlich wie bei Cantor, verstehen wir unter einer Menge die Zusammenfassung von bestimmten, wohlunterschiedenen Objekten zu einem Ganzen.
 Allerdings verhalten sich Mengen in \Python anders als ``mathematische Mengen'' (sie erfüllen zum Beispiel nicht das Extensionalitätsaxiom, i.e.\ sie sind nicht eindeutig durch ihre Elemente bestimmt).
-Das spielt in der Praxis keine Rolle und ist gerüchten zu Folge nur für zwangsgestörte Möchtegernmathematiker ein Problem.
+Das spielt in der Praxis keine Rolle und ist Gerüchten zu Folge nur für zwangsgestörte Möchtegernmathematiker ein Problem.
 
 
 \subsubsection{Mengen erzeugen}
@@ -65,7 +65,8 @@ s |= t | ... # Erweitert die Menge s um t, ...
 s &= t & ... # Entfernt alle Elmente aus s, die nicht in t,... sind
 s -= t | ... # Entfernt alle Elemente aus s, die in t, ... sind
 s ^= t       # Entfernt alle Elemente aus s, die nicht gleichzeitig
-             # in s und t sind
+             # in s und t sind und fuegt alle Elemente aus t hinzu, die
+             # nicht gleichzeitig in s und t sind
 add(e)       # Erweitert s um e
 remove(e)    # Entfernt e aus s; loest KeyError aus wenn e nicht in s ist
 discard(e)   # Entfernt e aus s falls e in s ist
