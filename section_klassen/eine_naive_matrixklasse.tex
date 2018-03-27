@@ -17,14 +17,14 @@ class Matrix:
        Koeffizienten der Matrix m in der i-ten Zeile und der j-ten Spalte
        zurueckgegeben."""
     i,j = ij
-    return self.elemente[i*self.zeilen + j]
+    return self.elemente[i*self.spalten + j]
   
   def __setitem__(self, ij ,z):
     """Implementiert den Zugriffsoperator []. Mit m[i,j] = z wird der
        Koeffizienten der Matrix m in der i-ten Zeile und der j-ten Spalte
        auf den Wert z gesetzt."""
     i,j = ij
-    self.elemente[i*self.zeilen + j] = z
+    self.elemente[i*self.spalten + j] = z
   
   def __str__(self):
    """Implementiert die Konvertierung zu str. Mit str(m) wird ein String

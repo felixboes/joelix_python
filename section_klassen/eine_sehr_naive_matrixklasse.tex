@@ -16,12 +16,12 @@ class Matrix:
   def getitem(self, i, j):
     """Gibt den Koeffizienten der Matrix in der i-ten Zeile und
        der j-ten Spalte zurueck."""
-    return self.elemente[i*self.zeilen + j]
+    return self.elemente[i*self.spalten + j]
   
   def setitem(self, i, j ,z):
     """Setzt den Koeffizienten der Matrix in der i-ten Zeile und
        der j-ten Spalte auf den Wert z."""
-    self.elemente[i*self.zeilen + j] = z
+    self.elemente[i*self.spalten + j] = z
   
   def string(self):
     """Gibt einen String zurueck, der die Matrix beschreibt."""
