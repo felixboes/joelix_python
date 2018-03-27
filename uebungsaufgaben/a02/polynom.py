@@ -1,24 +1,3 @@
-class Ente:
-    """Eine einfache Entenklasse."""
-
-    def __init__(self, quaks=1):
-        """Erstellt eine Ente.
-           Die Anzahl der quaks kann uebergeben werden."""
-        self.quaks = quaks
-
-    def __str__(self):
-        """Quake so oft es eben sein muss."""
-        if self.quaks < 0:
-            return 'Die Ente ist tot.'
-        else:
-            return self.quaks * 'Quak!'
-
-
-def ente(x):
-    """Was quakt wie eine Ente, ist eine Ente."""
-    return x.__ente__()
-
-
 class Polynom:
     """Eine einfache Polynomklasse"""
 
